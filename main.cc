@@ -16,13 +16,11 @@ int main(int argc, char *argv[])
         {{true, true, true, true}};
     Piece *Ipiece = new Piece(Igrid, 0, 0, 'I');
     vector<vector<bool>> Jgrid =
-        {{false, false, false},
-         {true, true, true},
+        {{true, true, true},
          {false, false, true}};
     Piece *Jpiece = new Piece(Jgrid, 0, 0, 'J');
     vector<vector<bool>> Lgrid =
-        {{false, false, false},
-         {true, true, true},
+        {{true, true, true},
          {true, false, false}};
     Piece *Lpiece = new Piece(Lgrid, 0, 0, 'L');
     vector<Piece *> pieces = {Ipiece, Jpiece, Lpiece};
