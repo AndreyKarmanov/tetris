@@ -13,10 +13,7 @@ int main(int argc, char *argv[])
     using namespace std;
     // Create pieces
     vector<vector<bool>> Igrid =
-        {{false, false, false, false},
-         {false, false, false, false},
-         {false, false, false, false},
-         {true, true, true, true}};
+        {{true, true, true, true}};
     Piece *Ipiece = new Piece(Igrid, 0, 0, 'I');
     vector<vector<bool>> Jgrid =
         {{false, false, false},
