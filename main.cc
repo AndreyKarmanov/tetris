@@ -77,7 +77,11 @@ int main(int argc, char *argv[])
         {
             g->drop();
         }
-        else if (input == "quit" || g->getGameOver())
+        else if (input == "quit")
+        {
+            break;
+        }
+        if (g->getGameOver())
         {
             break;
         }
