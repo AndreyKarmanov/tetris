@@ -23,7 +23,23 @@ int main(int argc, char *argv[])
         {{true, true, true},
          {true, false, false}};
     Piece *Lpiece = new Piece(Lgrid, 0, 0, 'L');
-    vector<Piece *> pieces = {Ipiece, Jpiece, Lpiece};
+    vector<vector<bool>> Ogrid =
+        {{true, true},
+         {true, true}};
+    Piece *Opiece = new Piece(Ogrid, 0, 0, 'O');
+    vector<vector<bool>> Sgrid =
+        {{false, true, true},
+         {true, true, false}};
+    Piece *Spiece = new Piece(Sgrid, 0, 0, 'S');
+    vector<vector<bool>> Tgrid =
+        {{true, true, true},
+         {false, true, false}};
+    Piece *Tpiece = new Piece(Tgrid, 0, 0, 'T');
+    vector<vector<bool>> Zgrid =
+        {{true, true, false},
+         {false, true, true}};
+    Piece *Zpiece = new Piece(Zgrid, 0, 0, 'Z');
+    vector<Piece *> pieces = {Ipiece, Jpiece, Lpiece, Opiece, Spiece, Tpiece, Zpiece};
     // Create a game
     PieceFactory *pf = new PieceFactory(pieces, true, 0);
     Game *g = new Game("Andrey", pf, 10, 10);
