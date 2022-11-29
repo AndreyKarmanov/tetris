@@ -4,9 +4,12 @@
 #include "pieceFactory.h"
 #include "gameBoard.h"
 
-Game::Game(std::string name, PieceFactory *factory, int rows, int cols) : GameSubject{rows, cols}, name{name}, factory{factory} {}
+Game::Game(std::string name, int level, int rows, int cols, bool random, int seed)
+    : GameSubject{rows, cols}, name{name}, factory{new PieceFactory(level, random, seed)} {}
 
-Game::~Game() {}
+Game::~Game() {
+    delete factory;
+}
 
 void Game::move(int right, int down)
 {
@@ -41,7 +44,7 @@ void Game::rotateCCW()
     }
     board->drawPiece(currentPiece, row, col);
 }
- 
+
 void Game::drop()
 {
     while (!board->intersects(currentPiece, row + 1, col))

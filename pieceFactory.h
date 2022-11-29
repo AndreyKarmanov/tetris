@@ -13,10 +13,10 @@ private:
     int seed;
 
 public:
-    PieceFactory(std::vector<Piece *> Pieces, bool random, int seed);
+    PieceFactory(int level, bool random, int seed);
     ~PieceFactory();
 
-    void updatePieces(std::vector<Piece *> Pieces);
+    void updatePieces(int level);
     void updateRandom(bool random);
 
     Piece *getPiece(int level);

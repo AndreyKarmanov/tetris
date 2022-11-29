@@ -19,7 +19,7 @@ private:
 
     void clearlines();
 public:
-    Game(std::string name, PieceFactory *factory, int rows, int cols);
+    Game(std::string name, int level, int rows, int cols, bool random, int seed);
     ~Game();
 
     void move(int right, int down);

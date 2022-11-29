@@ -1,5 +1,4 @@
 #include "piece.h"
-#include "pieceFactory.h"
 #include "graphicsWrapper.h"
 #include "textObserver.h"
 #include "game.h"
@@ -12,45 +11,8 @@ int main(int argc, char *argv[])
 {
     using namespace std;
     // Create pieces
-    vector<vector<bool>> Igrid =
-        {{false, false, false, false},
-         {false, false, false, false},
-         {false, false, false, false},
-         {true, true, true, true}};
-    Piece *Ipiece = new Piece(Igrid, 0, 0, 'I');
-    vector<vector<bool>> Jgrid =
-        {{false, false, false},
-         {true, true, true},
-         {false, false, true}};
-    Piece *Jpiece = new Piece(Jgrid, 0, 0, 'J');
-    vector<vector<bool>> Lgrid =
-        {{false, false, false},
-         {true, true, true},
-         {true, false, false}};
-    Piece *Lpiece = new Piece(Lgrid, 0, 0, 'L');
-    vector<vector<bool>> Ogrid =
-        {{true, true},
-         {true, true}};
-    Piece *Opiece = new Piece(Ogrid, 0, 0, 'O');
-    vector<vector<bool>> Sgrid =
-        {{false, false, false},
-         {false, true, true},
-         {true, true, false}};
-    Piece *Spiece = new Piece(Sgrid, 0, 0, 'S');
-    vector<vector<bool>> Tgrid =
-        {{false, false, false},
-         {true, true, true},
-         {false, true, false}};
-    Piece *Tpiece = new Piece(Tgrid, 0, 0, 'T');
-    vector<vector<bool>> Zgrid =
-        {{false, false, false},
-         {true, true, false},
-         {false, true, true}};
-    Piece *Zpiece = new Piece(Zgrid, 0, 0, 'Z');
-    vector<Piece *> pieces = {Ipiece, Jpiece, Lpiece, Opiece, Spiece, Tpiece, Zpiece};
     // Create a game
-    PieceFactory *pf = new PieceFactory(pieces, true, 0);
-    Game *g = new Game("Andrey", pf, 10, 10);
+    Game *g = new Game("Andrey", 0, 10, 10, true, 0);
     // Create a text observer
     TextObserver *to = new TextObserver(g);
     g->setPiece('S');
