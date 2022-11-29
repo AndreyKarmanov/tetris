@@ -15,6 +15,7 @@ private:
     
     PieceFactory *factory;
     bool gameOver;
+    bool heavy, splitting, blind;
     // current piece
     Piece *currentPiece;
     int row, col;

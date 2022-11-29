@@ -5,17 +5,9 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{level, rows, cols}, name{name}, player{player}
+    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, heavy{false}, gameOver{false}
 {
-    factory = new PieceFactory{"STLOZSI", random, seed};
-    // if (level == 0)
-    // {
-    //     factory = new PieceFactory(std::string{"sequence" + std::to_string(player) + ".txt"}, random, seed);
-    // }
-    // else
-    // {
-    //     factory = new PieceFactory("level" + std::to_string(level) + ".txt", random, seed);
-    // }
+    setLevel(level);
 }
 
 Game::~Game()
@@ -79,6 +71,25 @@ void Game::drop()
 void Game::setLevel(int level)
 {
     this->level = level;
+    if (level == 1)
+    {
+        factory->updatePieces("IJLOTIJLOTSZ");
+        heavy, splitting = false;
+    }
+    if (level == 2)
+    {
+        factory->updatePieces("IJLOTSZ");
+        heavy, splitting = false;
+    }
+    if (level >= 3)
+    {
+        factory->updatePieces("IJLOTSZSZ");
+        heavy = true;
+    }
+    if (level >= 4)
+    {
+        splitting = true;
+    }
 }
 
 void Game::setPiece(char type)
@@ -95,7 +106,7 @@ bool Game::getGameOver()
 }
 
 void Game::clearlines()
-{   
+{
     int lines = 0;
     for (int i = 0; i < board->getRows(); ++i)
     {
