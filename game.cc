@@ -5,16 +5,17 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{rows, cols, level}, name{name}, player{player}
+    : GameSubject{level, rows, cols}, name{name}, player{player}
 {
-    if (level == 0)
-    {
-        factory = new PieceFactory(std::string{"sequence" + std::to_string(player) + ".txt"}, random, seed);
-    }
-    else
-    {
-        factory = new PieceFactory("level" + std::to_string(level) + ".txt", random, seed);
-    }
+    factory = new PieceFactory{"STLOZSI", random, seed};
+    // if (level == 0)
+    // {
+    //     factory = new PieceFactory(std::string{"sequence" + std::to_string(player) + ".txt"}, random, seed);
+    // }
+    // else
+    // {
+    //     factory = new PieceFactory("level" + std::to_string(level) + ".txt", random, seed);
+    // }
 }
 
 Game::~Game()
