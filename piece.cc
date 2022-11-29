@@ -56,6 +56,11 @@ int Piece::getHeight() const
     return height;
 }
 
+int Piece::getSize() const
+{
+    return size;
+}
+
 void Piece::rotateCW()
 {
     std::vector<std::vector<bool>> newGrid;
@@ -90,4 +95,9 @@ void Piece::rotateCCW()
     int temp = width;
     width = height;
     height = temp;
+}
+
+int Piece::chSize(int size)
+{
+    return this->size = size;
 }

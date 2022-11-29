@@ -32,10 +32,12 @@ public:
     char getType() const;
     int getWidth() const;
     int getHeight() const;
+    int getSize() const;
 
     // mutators
     void rotateCW();
     void rotateCCW();
+    int chSize(int size);
 };
 
 #endif

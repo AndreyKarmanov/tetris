@@ -12,7 +12,6 @@ class Game : public GameSubject
 private:
     std::string name;
     int player;
-    int level;
     
     PieceFactory *factory;
     bool gameOver;

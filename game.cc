@@ -5,7 +5,7 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{rows, cols}, name{name}, level{level}, player{player}
+    : GameSubject{rows, cols}, name{name}, player{player}
 {
     if (level == 0)
     {
@@ -94,7 +94,8 @@ bool Game::getGameOver()
 }
 
 void Game::clearlines()
-{
+{   
+    int lines = 0;
     for (int i = 0; i < board->getRows(); ++i)
     {
         bool full = true;
@@ -110,6 +111,12 @@ void Game::clearlines()
         {
             for (int j = 0; j < board->getCols(); ++j)
             {
+                Piece *p = board->getPiece(i, j);
+                if (p->chSize(p->getSize() - 1) == 0)
+                {
+                    score += (p->getLevel() + 1) * (p->getLevel() + 1);
+                    delete p;
+                }
                 board->setPiece(nullptr, i, j);
             }
             for (int k = i; k > 0; --k)
@@ -119,6 +126,16 @@ void Game::clearlines()
                     board->setPiece(board->getPiece(k - 1, j), k, j);
                 }
             }
+            --i;
+            ++lines;
         }
+    }
+    if (lines > 0)
+    {
+        score += (level + lines) * (level + lines);
+    }
+    if (score > highScore)
+    {
+        highScore = score;
     }
 }

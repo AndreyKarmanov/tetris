@@ -9,7 +9,7 @@ PieceFactory::PieceFactory(std::string sequence, bool random, int seed) : random
 
 PieceFactory::~PieceFactory() {}
 
-Piece *PieceFactory::createPiece(char type, int level)
+Piece *PieceFactory::getPiece(char type, int level)
 {
     switch (type)
     {
@@ -49,7 +49,7 @@ Piece *PieceFactory::createPiece(char type, int level)
                           {false, true, false}},
                          level, 6, 'T');
     default:
-        return nullptr;
+        return nullptr; // can add extra pieces here
     }
 }
 
@@ -72,10 +72,10 @@ Piece *PieceFactory::getPiece(int level)
 {
     if (random)
     {
-        return createPiece(pieces[rand() % pieces.size()], level);
+        return getPiece(pieces[rand() % pieces.size()], level);
     }
     else
     {
-        return createPiece(pieces[currentPiece++ % pieces.size()], level);
+        return getPiece(pieces[currentPiece++ % pieces.size()], level);
     }
 }

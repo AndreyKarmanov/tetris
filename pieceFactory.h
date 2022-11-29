@@ -21,7 +21,7 @@ public:
     void updateRandom(bool random);
 
     Piece *getPiece(int level);
-    static Piece *createPiece(char type, int level);
+    static Piece *getPiece(char type, int level);
 };
 
 #endif
