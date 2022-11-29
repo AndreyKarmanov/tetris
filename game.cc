@@ -4,75 +4,127 @@
 #include "pieceFactory.h"
 #include "gameBoard.h"
 
-Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{rows, cols}, name{name}, level{level}, player{player}
+void drawPiece(GameBoard *board, Piece *piece, int row, int col)
 {
-    if (level == 0)
+    auto grid = piece->getGrid();
+    int tempcol = col;
+    for (auto vec : grid)
     {
-        factory = new PieceFactory(std::string{"sequence" + std::to_string(player) + ".txt"}, random, seed);
-    }
-    else
-    {
-        factory = new PieceFactory("level" + std::to_string(level) + ".txt", random, seed);
+        col = tempcol;
+        for (auto cell : vec)
+        {
+            if (cell)
+            {
+                board->setPiece(piece, row, col);
+            }
+            col++;
+        }
+        row++;
     }
 }
 
-Game::~Game()
+void erasePiece(GameBoard *board, Piece *piece, int row, int col)
 {
-    delete factory;
+    auto grid = piece->getGrid();
+    int tempcol = col;
+    for (auto vec : grid)
+    {
+        col = tempcol;
+        for (auto cell : vec)
+        {
+            if (cell)
+            {
+                board->setPiece(nullptr, row, col);
+            }
+            col++;
+        }
+        row++;
+    }
 }
+
+bool intersects(GameBoard *board, Piece *piece, int row, int col)
+{
+    auto grid = piece->getGrid();
+    int tempcol = col;
+    for (auto vec : grid)
+    {
+        col = tempcol;
+        for (auto cell : vec)
+        {
+            if (cell)
+            {
+                if (row < 0 || row >= board->getRows() || col < 0 || col >= board->getCols())
+                {
+                    return true;
+                }
+                auto tmp = board->getPiece(row, col);
+                if (tmp != nullptr && tmp != piece)
+                {
+                    return true;
+                }
+            }
+            ++col;
+        }
+        ++row;
+    }
+    return false;
+}
+
+Game::Game(std::string name, PieceFactory *factory, int rows, int cols) : GameSubject{rows, cols}, name{name}, factory{factory} {}
+
+Game::~Game() {}
 
 void Game::move(int right, int down)
 {
-    if (board->intersects(currentPiece, row + down, col + right))
+    if (intersects(board, currentPiece, row + down, col + right))
     {
         return;
     }
-    board->erasePiece(currentPiece, row, col);
+    erasePiece(board, currentPiece, row, col);
     row += down;
     col += right;
-    board->drawPiece(currentPiece, row, col);
+    drawPiece(board, currentPiece, row, col);
 }
 
 void Game::rotateCW()
 {
-    board->erasePiece(currentPiece, row, col);
+    erasePiece(board, currentPiece, row, col);
     currentPiece->rotateCW();
-    if (board->intersects(currentPiece, row, col))
+    if (intersects(board, currentPiece, row, col))
     {
         currentPiece->rotateCCW();
     }
-    board->drawPiece(currentPiece, row, col);
+    drawPiece(board, currentPiece, row, col);
 }
 
 void Game::rotateCCW()
 {
-    board->erasePiece(currentPiece, row, col);
+    erasePiece(board, currentPiece, row, col);
     currentPiece->rotateCCW();
-    if (board->intersects(currentPiece, row, col))
+    if (intersects(board, currentPiece, row, col))
     {
         currentPiece->rotateCW();
     }
-    board->drawPiece(currentPiece, row, col);
+    drawPiece(board, currentPiece, row, col);
 }
-
+ 
 void Game::drop()
 {
-    while (!board->intersects(currentPiece, row + 1, col))
+    while (!intersects(board, currentPiece, row + 1, col))
     {
-        board->erasePiece(currentPiece, row, col);
+        erasePiece(board, currentPiece, row, col);
         row++;
-        board->drawPiece(currentPiece, row, col);
+        drawPiece(board, currentPiece, row, col);
     }
     currentPiece = factory->getPiece(level);
     row = 0;
     col = 0;
-    if (board->intersects(currentPiece, row, col))
+    if (intersects(board, currentPiece, row, col))
     {
         gameOver = true;
     }
     clearlines();
-    board->drawPiece(currentPiece, row, col);
+    drawPiece(board, currentPiece, row, col);
 }
 
 void Game::setLevel(int level)
@@ -85,7 +137,7 @@ void Game::setPiece(char type)
     currentPiece = factory->getPiece(type, level);
     row = 0;
     col = 0;
-    board->drawPiece(currentPiece, row, col);
+    drawPiece(board, currentPiece, row, col);
 }
 
 bool Game::getGameOver()
