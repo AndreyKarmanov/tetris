@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
     Game *g = new Game("Andrey", 0, 10, 11, true, 0, 1);
     // Create a text observer
     TextObserver *to = new TextObserver(g);
+    vector<GameSubject*> games{g};
+    GraphicsWrapper *gw = new GraphicsWrapper(games);
     g->setPiece('S');
     g->attach(to);
     g->notifyObservers();

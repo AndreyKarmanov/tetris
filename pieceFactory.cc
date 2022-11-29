@@ -18,36 +18,36 @@ Piece *PieceFactory::getPiece(char type, int level)
                           {false, false, false, false},
                           {false, false, false, false},
                           {true, true, true, true}},
-                         level, 0, 'I');
+                         level, 1, 'I');
     case 'J':
         return new Piece({{false, false, false},
                           {true, true, true},
                           {false, false, true}},
-                         level, 1, 'J');
+                         level, 2, 'J');
     case 'L':
         return new Piece({{false, false, false},
                           {true, true, true},
                           {true, false, false}},
-                         level, 2, 'L');
+                         level, 3, 'L');
     case 'O':
         return new Piece({{true, true},
                           {true, true}},
-                         level, 3, 'O');
+                         level, 4, 'O');
     case 'S':
         return new Piece({{false, false, false},
                           {false, true, true},
                           {true, true, false}},
-                         level, 4, 'S');
+                         level, 5, 'S');
     case 'Z':
         return new Piece({{false, false, false},
                           {true, true, false},
                           {false, true, true}},
-                         level, 5, 'Z');
+                         level, 6, 'Z');
     case 'T':
         return new Piece({{false, false, false},
                           {true, true, true},
                           {false, true, false}},
-                         level, 6, 'T');
+                         level, 7, 'T');
     default:
         return nullptr; // can add extra pieces here
     }

@@ -4,7 +4,7 @@
 #include "window.h"
 #include "piece.h"
 
-GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwindow{500, games.size() * 5 + 20}} {
+GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwindow{500, 500}} {
     for (auto game : games) {
         observers.emplace_back(new GraphicsObserver{game, 10, game->getBoard()->getCols() * 5 + 20, w});
         game->attach(observers.back());
@@ -19,7 +19,15 @@ void GraphicsWrapper::GraphicsObserver::notify() {
     {
         for (int cols = 0; cols < board->getCols(); ++cols)
         {
-            w->fillRectangle(x + cols * 5, y + rows * 5, 5, 5, board->getPiece(rows, cols)->getType());
+            Piece *p = board->getPiece(rows, cols);
+            if (p != nullptr)
+            {
+                w->fillRectangle(x + cols * 10, y + rows * 10, 10, 10, p->getColour());
+            }
+            else
+            {
+                w->fillRectangle(x + cols * 10, y + rows * 10, 10, 10, 0);
+            }
         }
     }
 }
