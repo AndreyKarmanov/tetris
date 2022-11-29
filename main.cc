@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     using namespace std;
     // Create pieces
     // Create a game
-    Game *g = new Game("Andrey", 0, 10, 10, true, 0);
+    Game *g = new Game("Andrey", 0, 15, 10, true, 0, 1);
     // Create a text observer
     TextObserver *to = new TextObserver(g);
     g->setPiece('S');

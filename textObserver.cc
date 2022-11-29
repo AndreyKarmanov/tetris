@@ -12,6 +12,14 @@ TextObserver::TextObserver(GameSubject *game) : GameObserver{game} {}
 void TextObserver::notify() {
     GameBoard *board = game->getBoard();
     std::stringstream ss;
+    ss << "+" << std::endl;
+    for (int cols = 0; cols < board->getCols(); ++cols)
+    {
+        ss << "-";
+    }
+    ss << "| Level: " << game->getLevel() << std::endl;
+    ss << "| Score: " << game->getScore() << std::endl;
+    ss << "| Hi Score: " << game->getHiScore() << std::endl;
     ss << "+";
     for (int cols = 0; cols < board->getCols(); ++cols)
     {

@@ -2,7 +2,7 @@
 #include "gameObserver.h"
 #include "gameBoard.h"
 
-GameSubject::GameSubject(int rows, int cols) : board{new GameBoard(rows, cols)}, score{0}, level{0}, highScore{0} {}
+GameSubject::GameSubject(int level, int rows, int cols) : board{new GameBoard(rows, cols)}, score{0}, level{level}, highScore{0} {}
 
 GameSubject::~GameSubject() { delete board; }
 

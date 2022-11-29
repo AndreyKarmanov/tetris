@@ -13,7 +13,7 @@ protected:
   GameBoard *board;
   int score, level, highScore;
 public:
-  GameSubject(int rows, int cols);
+  GameSubject(int level, int rows, int cols);
   void attach(GameObserver *o);
   void detach(GameObserver *o);
   void notifyObservers();

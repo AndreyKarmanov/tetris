@@ -5,7 +5,7 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{rows, cols}, name{name}, player{player}
+    : GameSubject{rows, cols, level}, name{name}, player{player}
 {
     if (level == 0)
     {
