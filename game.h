@@ -11,15 +11,17 @@ class Game : public GameSubject
 {
 private:
     std::string name;
+    int player;
+    int level;
+    
     PieceFactory *factory;
     bool gameOver;
     // current piece
     Piece *currentPiece;
     int row, col;
-
     void clearlines();
 public:
-    Game(std::string name, PieceFactory *factory, int rows, int cols);
+    Game(std::string name, int level, int rows, int cols, bool random, int seed, int player);
     ~Game();
 
     void move(int right, int down);

@@ -1,5 +1,4 @@
 #include "piece.h"
-#include "pieceFactory.h"
 #include "graphicsWrapper.h"
 #include "textObserver.h"
 #include "game.h"
@@ -12,29 +11,11 @@ int main(int argc, char *argv[])
 {
     using namespace std;
     // Create pieces
-    vector<vector<bool>> Igrid =
-        {{false, false, false, false},
-         {false, false, false, false},
-         {false, false, false, false},
-         {true, true, true, true}};
-    Piece *Ipiece = new Piece(Igrid, 0, 0, 'I');
-    vector<vector<bool>> Jgrid =
-        {{false, false, false},
-         {true, true, true},
-         {false, false, true}};
-    Piece *Jpiece = new Piece(Jgrid, 0, 0, 'J');
-    vector<vector<bool>> Lgrid =
-        {{false, false, false},
-         {true, true, true},
-         {true, false, false}};
-    Piece *Lpiece = new Piece(Lgrid, 0, 0, 'L');
-    vector<Piece *> pieces = {Ipiece, Jpiece, Lpiece};
     // Create a game
-    PieceFactory *pf = new PieceFactory(pieces, true, 0);
-    Game *g = new Game("Andrey", pf, 10, 10);
+    Game *g = new Game("Andrey", 0, 10, 10, true, 0);
     // Create a text observer
     TextObserver *to = new TextObserver(g);
-    g->setPiece('I');
+    g->setPiece('S');
     g->attach(to);
     g->notifyObservers();
     g->move(1, 0);
@@ -66,7 +47,11 @@ int main(int argc, char *argv[])
         {
             g->drop();
         }
-        else if (input == "quit" || g->getGameOver())
+        else if (input == "quit")
+        {
+            break;
+        }
+        if (g->getGameOver())
         {
             break;
         }

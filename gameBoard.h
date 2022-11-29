@@ -21,6 +21,12 @@ public:
 
     int getRows();
     int getCols();
+
+    bool intersects(Piece *piece, int row, int col);
+
+    void drawPiece(Piece *piece, int row, int col);
+    void erasePiece(Piece *piece, int row, int col);
+
     void setPiece(Piece *piece, int row, int col);
     Piece *getPiece(int row, int col);
 };
