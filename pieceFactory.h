@@ -8,7 +8,7 @@
 class PieceFactory
 {
 private:
-    std::vector<Piece *> pieces;
+    std::vector<char> pieces;
     bool random;
     int currentPiece;
     int seed;
@@ -21,7 +21,7 @@ public:
     void updateRandom(bool random);
 
     Piece *getPiece(int level);
-    Piece *getPiece(char type, int level);
+    static Piece *createPiece(char type, int level);
 };
 
 #endif
