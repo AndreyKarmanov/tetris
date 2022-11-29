@@ -2,7 +2,6 @@
 #define PIECEFACTORY_H
 
 #include <vector>
-#include <string>
 #include "piece.h"
 
 class PieceFactory
@@ -14,10 +13,10 @@ private:
     int seed;
 
 public:
-    PieceFactory(std::string sequence, bool random, int seed);
+    PieceFactory(std::vector<Piece *> Pieces, bool random, int seed);
     ~PieceFactory();
 
-    void updatePieces(std::string sequence);
+    void updatePieces(std::vector<Piece *> Pieces);
     void updateRandom(bool random);
 
     Piece *getPiece(int level);
