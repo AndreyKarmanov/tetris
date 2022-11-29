@@ -4,10 +4,21 @@
 #include "pieceFactory.h"
 #include "gameBoard.h"
 
-Game::Game(std::string name, int level, int rows, int cols, bool random, int seed)
-    : GameSubject{rows, cols}, name{name}, factory{new PieceFactory(level, random, seed)} {}
+Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
+    : GameSubject{rows, cols}, name{name}, level{level}, player{player}
+{
+    if (level == 0)
+    {
+        factory = new PieceFactory(std::string{"sequence" + std::to_string(player) + ".txt"}, random, seed);
+    }
+    else
+    {
+        factory = new PieceFactory("level" + std::to_string(level) + ".txt", random, seed);
+    }
+}
 
-Game::~Game() {
+Game::~Game()
+{
     delete factory;
 }
 

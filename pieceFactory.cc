@@ -1,11 +1,10 @@
 #include "pieceFactory.h"
 #include "piece.h"
 #include <cstdlib>
-#include <vector>
 
-PieceFactory::PieceFactory(int level, bool random, int seed) : random{random}, seed{seed}
+PieceFactory::PieceFactory(std::string sequence, bool random, int seed) : random{random}, seed{seed}
 {
-    updatePieces(level);
+    updatePieces(sequence);
 }
 
 PieceFactory::~PieceFactory() {
@@ -14,7 +13,7 @@ PieceFactory::~PieceFactory() {
     }
 }
 
-void PieceFactory::updatePieces(int level)
+void PieceFactory::updatePieces(std::string sequence)
 {
     using namespace std;
     vector<vector<bool>> Igrid =
