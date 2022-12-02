@@ -32,7 +32,9 @@ public:
 
     void setLevel(int level);
     void setPiece(char type);
-
+    void setHeavy(bool heavy);
+    
+    void random(bool random);
     void restart();
     bool getGameOver();
 };

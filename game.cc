@@ -94,10 +94,20 @@ void Game::setLevel(int level)
 
 void Game::setPiece(char type)
 {
-    currentPiece = factory->getPiece(type, level);
-    row = 0;
-    col = 0;
-    board->drawPiece(currentPiece, row, col);
+    Piece *temp = factory->getPiece(type, level);
+    if (temp != nullptr)
+    {
+        board->erasePiece(currentPiece, row, col);
+        delete currentPiece;
+        currentPiece = temp;
+        row = 0;
+        col = 0;
+        board->drawPiece(currentPiece, row, col);
+    }
+    else
+    {
+        delete temp;
+    }
 }
 
 bool Game::getGameOver()
