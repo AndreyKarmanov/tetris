@@ -5,7 +5,7 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, heavy{false}, gameOver{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}
+    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavy{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}
 {
     setLevel(level);
 }
@@ -15,7 +15,7 @@ Game::~Game()
     delete factory;
 }
 
-void Game::move(int right, int down, bool recurCall = false)
+void Game::move(int right, int down, bool recurCall)
 {
 
     if (board->intersects(currentPiece, row + down, col + right))
@@ -69,15 +69,16 @@ void Game::drop()
     while (!board->intersects(currentPiece, row + 1, col))
     {
         board->erasePiece(currentPiece, row, col);
-        row++;
+        ++row;
         board->drawPiece(currentPiece, row, col);
     }
-    // set to middle of board
-    col = (board->getCols() - currentPiece->getWidth()) / 2;
-    row = 0;
+    clearlines();
+
     if (splitting && ++dropsSinceClear % 5 == 0)
     {
         currentPiece = factory->getPiece('*', level, heavyPieces);
+        col = (board->getCols() - currentPiece->getWidth()) / 2;
+        row = 0;
         if (board->intersects(currentPiece, row, col))
         {
             gameOver = true;
@@ -85,12 +86,21 @@ void Game::drop()
         }
         drop();
     }
+    else
+    {
+        newPiece();
+    }
+}
+
+void Game::newPiece()
+{
     currentPiece = factory->getPiece(level, heavyPieces);
+    col = (board->getCols() - currentPiece->getWidth()) / 2;
+    row = 0;
     if (board->intersects(currentPiece, row, col))
     {
         gameOver = true;
     }
-    clearlines();
     board->drawPiece(currentPiece, row, col);
 }
 
@@ -100,12 +110,12 @@ void Game::setLevel(int level)
     if (level == 1)
     {
         factory->updatePieces("IJLOTIJLOTSZ");
-        heavyPieces, splitting = false;
+        heavyPieces = splitting = false;
     }
     else if (level == 2)
     {
         factory->updatePieces("IJLOTSZ");
-        heavyPieces, splitting = false;
+        heavyPieces = splitting = false;
     }
     else if (level >= 3)
     {

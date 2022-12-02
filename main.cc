@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     vector<GameSubject*> games{g};
     GraphicsWrapper *gw = new GraphicsWrapper(games);
     g->attach(to);
+    g->newPiece();
+    g->notifyObservers();
     string input;
     while (cin >> input)
     {
@@ -55,7 +57,7 @@ int main(int argc, char *argv[])
         }
         else if (input == "restart")
         {
-            g->restart();
+
         }
         else if (input == "random")
         {

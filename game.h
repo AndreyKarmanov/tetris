@@ -25,12 +25,12 @@ public:
     Game(std::string name, int level, int rows, int cols, bool random, int seed, int player);
     ~Game();
 
-    void move(int right, int down, bool autoCall);
+    void move(int right, int down, bool recurCall = false);
     void drop();
     void rotateCW();
     void rotateCCW();
 
-
+    void newPiece();
     void setLevel(int level);
     void setPiece(char type);
     void setHeavy(bool heavy);
