@@ -17,11 +17,7 @@ int main(int argc, char *argv[])
     TextObserver *to = new TextObserver(g);
     vector<GameSubject*> games{g};
     GraphicsWrapper *gw = new GraphicsWrapper(games);
-    g->setPiece('S');
     g->attach(to);
-    g->notifyObservers();
-    g->move(1, 0);
-    g->notifyObservers();
     string input;
     while (cin >> input)
     {

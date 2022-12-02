@@ -19,10 +19,10 @@ private:
     // state
     const int level;
     int size;
+    bool heavy;
 
 public:
-    Piece(std::vector<std::vector<bool>> grid, int level, int colour, char type);
-    Piece(const Piece &other, int level);
+    Piece(std::vector<std::vector<bool>> grid, int level, int colour, char type, bool heavy);
     ~Piece();
 
     // accessors
@@ -33,6 +33,7 @@ public:
     int getWidth() const;
     int getHeight() const;
     int getSize() const;
+    bool isHeavy() const;
 
     // mutators
     void rotateCW();

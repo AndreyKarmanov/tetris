@@ -5,7 +5,7 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, heavy{false}, gameOver{false}
+    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, heavy{false}, gameOver{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}
 {
     setLevel(level);
 }
@@ -15,16 +15,23 @@ Game::~Game()
     delete factory;
 }
 
-void Game::move(int right, int down)
+void Game::move(int right, int down, bool recurCall = false)
 {
+
     if (board->intersects(currentPiece, row + down, col + right))
     {
         return;
     }
+
     board->erasePiece(currentPiece, row, col);
     row += down;
     col += right;
     board->drawPiece(currentPiece, row, col);
+
+    if (currentPiece->isHeavy() && !recurCall)
+    {
+        move(0, 1, true);
+    }
 }
 
 void Game::rotateCW()
@@ -36,6 +43,10 @@ void Game::rotateCW()
         currentPiece->rotateCCW();
     }
     board->drawPiece(currentPiece, row, col);
+    if (currentPiece->isHeavy())
+    {
+        move(0, 1);
+    };
 }
 
 void Game::rotateCCW()
@@ -47,6 +58,10 @@ void Game::rotateCCW()
         currentPiece->rotateCW();
     }
     board->drawPiece(currentPiece, row, col);
+    if (currentPiece->isHeavy())
+    {
+        move(0, 1);
+    };
 }
 
 void Game::drop()
@@ -57,9 +72,20 @@ void Game::drop()
         row++;
         board->drawPiece(currentPiece, row, col);
     }
-    currentPiece = factory->getPiece(level);
+    // set to middle of board
+    col = (board->getCols() - currentPiece->getWidth()) / 2;
     row = 0;
-    col = 0;
+    if (splitting && ++dropsSinceClear % 5 == 0)
+    {
+        currentPiece = factory->getPiece('*', level, heavyPieces);
+        if (board->intersects(currentPiece, row, col))
+        {
+            gameOver = true;
+            return;
+        }
+        drop();
+    }
+    currentPiece = factory->getPiece(level, heavyPieces);
     if (board->intersects(currentPiece, row, col))
     {
         gameOver = true;
@@ -74,17 +100,17 @@ void Game::setLevel(int level)
     if (level == 1)
     {
         factory->updatePieces("IJLOTIJLOTSZ");
-        heavy, splitting = false;
+        heavyPieces, splitting = false;
     }
-    if (level == 2)
+    else if (level == 2)
     {
         factory->updatePieces("IJLOTSZ");
-        heavy, splitting = false;
+        heavyPieces, splitting = false;
     }
-    if (level >= 3)
+    else if (level >= 3)
     {
         factory->updatePieces("IJLOTSZSZ");
-        heavy = true;
+        heavyPieces = true, splitting = false;
     }
     if (level >= 4)
     {
@@ -94,14 +120,14 @@ void Game::setLevel(int level)
 
 void Game::setPiece(char type)
 {
-    Piece *temp = factory->getPiece(type, level);
+    Piece *temp = factory->getPiece(type, level, heavyPieces);
     if (temp != nullptr)
     {
         board->erasePiece(currentPiece, row, col);
         delete currentPiece;
         currentPiece = temp;
+        col = (board->getCols() - currentPiece->getWidth()) / 2;
         row = 0;
-        col = 0;
         board->drawPiece(currentPiece, row, col);
     }
     else
@@ -155,6 +181,7 @@ void Game::clearlines()
     if (lines > 0)
     {
         score += (level + lines) * (level + lines);
+        dropsSinceClear = 0;
     }
     if (score > highScore)
     {

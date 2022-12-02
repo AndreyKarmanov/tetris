@@ -1,5 +1,5 @@
 #include "piece.h"
-Piece::Piece(std::vector<std::vector<bool>> grid, int level, int colour, char type) : grid{grid}, colour{colour}, type{type}, level{level}
+Piece::Piece(std::vector<std::vector<bool>> grid, int level, int colour, char type, bool heavy) : grid{grid}, colour{colour}, type{type}, level{level}, heavy{heavy}
 {
     for (auto row : grid)
     {
@@ -21,8 +21,6 @@ Piece::Piece(std::vector<std::vector<bool>> grid, int level, int colour, char ty
         width = 0;
     }
 }
-
-Piece::Piece(const Piece &other, int level) : width{other.width}, height{other.height}, grid{other.grid}, colour{other.colour}, type{other.type}, level{level}, size{other.size} {}
 
 Piece::~Piece() {}
 
@@ -59,6 +57,11 @@ int Piece::getHeight() const
 int Piece::getSize() const
 {
     return size;
+}
+
+bool Piece::isHeavy() const
+{
+    return heavy;
 }
 
 void Piece::rotateCW()

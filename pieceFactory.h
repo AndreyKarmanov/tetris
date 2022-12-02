@@ -20,8 +20,8 @@ public:
     void updatePieces(std::string sequence);
     void updateRandom(bool random);
 
-    Piece *getPiece(int level);
-    static Piece *getPiece(char type, int level);
+    Piece *getPiece(int level, bool heavy);
+    static Piece *getPiece(char type, int level, bool heavy);
 };
 
 #endif

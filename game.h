@@ -15,7 +15,8 @@ private:
     
     PieceFactory *factory;
     bool gameOver;
-    bool heavy, splitting, blind;
+    bool heavy, splitting, blind, heavyPieces;
+    int dropsSinceClear;
     // current piece
     Piece *currentPiece;
     int row, col;
@@ -24,7 +25,7 @@ public:
     Game(std::string name, int level, int rows, int cols, bool random, int seed, int player);
     ~Game();
 
-    void move(int right, int down);
+    void move(int right, int down, bool autoCall);
     void drop();
     void rotateCW();
     void rotateCCW();
