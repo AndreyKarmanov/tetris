@@ -12,9 +12,10 @@ int main(int argc, char *argv[])
     using namespace std;
     // new game setup:
     // name, level, rows, cols, random, seed, player#
-    vector<Game *> games{new Game("Andrey", 0, 18, 11, true, 0, 1),
-                         new Game("John", 0, 18, 11, true, 0, 2),
-                         new Game("Nolan", 0, 18, 11, true, 0, 3)};
+    vector<Game *> games{new Game("Andrey", 0, 18, 11, true, 0, 1)
+    // , new Game("John", 0, 18, 11, true, 0, 2)
+    // , new Game("Nolan", 0, 18, 11, true, 0, 3)
+    };
 
     GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
     string input;
@@ -23,7 +24,6 @@ int main(int argc, char *argv[])
     for (int i = 0;; i = (i + 1) % games.size())
     {
         g = games[i];
-        g->notifyObservers();
         cout << "Player " << g->getName() << "'s turn" << endl;
         cin >> input;
         if (input == "left")

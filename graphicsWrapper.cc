@@ -7,7 +7,7 @@
 GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwindow{500, 500}} {
     int player = 0;
     for (auto game : games) {
-        observers.emplace_back(new GraphicsObserver{game, player++ * (game->getBoard()->getCols() * 10 + 20), 0, w});
+        observers.emplace_back(new GraphicsObserver{game, player++ * (game->getBoard()->getCols() * 10 + 20) + 20, 20, w});
         game->attach(observers.back());
     }
     w->fillRectangle(0, 0, 500, 500, Xwindow::Black);
