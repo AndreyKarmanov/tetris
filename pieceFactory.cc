@@ -66,7 +66,7 @@ void PieceFactory::updatePieces(std::string sequence)
     currentPiece = 0;
 }
 
-void PieceFactory::updateRandom(bool random)
+void PieceFactory::setRandom(bool random)
 {
     this->random = random;
 }

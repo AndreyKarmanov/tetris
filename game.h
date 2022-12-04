@@ -12,18 +12,23 @@ class Game : public GameSubject
 private:
     std::string name;
     int player;
-    
+
     PieceFactory *factory;
     bool gameOver;
     bool heavy, splitting, blind, heavyPieces;
-    int dropsSinceClear;
+    int dropsSinceClear, lastClearCount;
+    std::vector<Piece *> oldPieces;
+
     // current piece
     Piece *currentPiece;
     int row, col;
     void clearlines();
+
 public:
     Game(std::string name, int level, int rows, int cols, bool random, int seed, int player);
     ~Game();
+
+    int getLastClearCount() const;
 
     void move(int right, int down, bool recurCall = false);
     void drop();
@@ -34,8 +39,9 @@ public:
     void setLevel(int level);
     void setPiece(char type);
     void setHeavy(bool heavy);
+    void setRandom(bool random);
+    void setSequence(std::string file);
     
-    void random(bool random);
     void restart();
     bool getGameOver();
 };

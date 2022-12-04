@@ -10,96 +10,121 @@
 int main(int argc, char *argv[])
 {
     using namespace std;
-    // Create pieces
-    // Create a game
-    Game *g = new Game("Andrey", 0, 10, 11, true, 0, 1);
-    // Create a text observer
-    TextObserver *to = new TextObserver(g);
-    vector<GameSubject*> games{g};
-    GraphicsWrapper *gw = new GraphicsWrapper(games);
-    g->attach(to);
-    g->newPiece();
-    g->notifyObservers();
+    // new game setup:
+    // name, level, rows, cols, random, seed, player# (1 or 2)
+    vector<Game *> games{new Game("Andrey", 0, 10, 11, true, 0, 1),
+                         new Game("Marvin", 0, 10, 11, true, 0, 2)};
+
+    GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
     string input;
-    while (cin >> input)
+    Game *g;
+    for (int i = 0;; i = (i + 1) % games.size())
     {
-        if (input == "left")
+        g = games[i];
+        while (cin >> input)
         {
-            g->move(-1, 0);
+            g->notifyObservers();
+            if (input == "left")
+            {
+                g->move(-1, 0);
+            }
+            else if (input == "right")
+            {
+                g->move(1, 0);
+            }
+            else if (input == "down")
+            {
+                g->move(0, 1);
+            }
+            else if (input == "CW")
+            {
+                g->rotateCW();
+            }
+            else if (input == "CCW")
+            {
+                g->rotateCCW();
+            }
+            else if (input == "drop")
+            {
+                g->drop();
+                if (g->getLastClearCount() > 2)
+                {
+                    // TODO: activate special ability
+                }
+            }
+            else if (input == "levelup")
+            {
+                g->setLevel(g->getLevel() + 1);
+            }
+            else if (input == "leveldown")
+            {
+                g->setLevel(g->getLevel() - 1);
+            }
+            else if (input == "restart")
+            {
+                g->restart();
+            }
+            else if (input == "random")
+            {
+                g->setRandom(true);
+            }
+            else if (input == "sequence")
+            {
+                string file;
+                if (cin >> file)
+                {
+                    // g->setSequence(file);
+                }
+            }
+            else if (input == "norandom")
+            {
+                string file;
+                if (cin >> file)
+                {
+                    // g->setSequence(file);
+                }
+                g->setRandom(true);
+            }
+            else if (input == "I")
+            {
+                g->setPiece('I');
+            }
+            else if (input == "J")
+            {
+                g->setPiece('J');
+            }
+            else if (input == "L")
+            {
+                g->setPiece('L');
+            }
+            else if (input == "O")
+            {
+                g->setPiece('O');
+            }
+            else if (input == "S")
+            {
+                g->setPiece('S');
+            }
+            else if (input == "Z")
+            {
+                g->setPiece('Z');
+            }
+            else if (input == "T")
+            {
+                g->setPiece('T');
+            }
+            else if (input == "quit")
+            {
+                break;
+            }
+            g->notifyObservers();
         }
-        else if (input == "right")
-        {
-            g->move(1, 0);
-        }
-        else if (input == "down")
-        {
-            g->move(0, 1);
-        }
-        else if (input == "CW")
-        {
-            g->rotateCW();
-        }
-        else if (input == "CCW")
-        {
-            g->rotateCCW();
-        }
-        else if (input == "drop")
-        {
-            g->drop();
-        }
-        else if (input == "levelup")
-        {
-            g->setLevel(g->getLevel() + 1);
-        }
-        else if (input == "leveldown")
-        {
-            g->setLevel(g->getLevel() - 1);
-        }
-        else if (input == "restart")
-        {
+    }
 
-        }
-        else if (input == "random")
-        {
-
-        }
-        else if (input == "sequence")
-        {
-
-        }
-        else if (input == "I")
-        {
-            g->setPiece('I');
-        }
-        else if (input == "J")
-        {
-            g->setPiece('J');
-        }
-        else if (input == "L")
-        {
-            g->setPiece('L');
-        }
-        else if (input == "O")
-        {
-            g->setPiece('O');
-        }
-        else if (input == "S")
-        {
-            g->setPiece('S');
-        }
-        else if (input == "Z")
-        {
-            g->setPiece('Z');
-        }
-        else if (input == "T")
-        {
-            g->setPiece('T');
-        }
-        else if (input == "quit")
-        {
-            break;
-        }
-        g->notifyObservers();
+    delete gw;
+    for (Game *g : games)
+    {
+        delete g;
     }
     return 0;
 }

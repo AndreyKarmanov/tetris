@@ -9,9 +9,19 @@ int GameBoard::getRows() { return rows; }
 
 int GameBoard::getCols() { return cols; }
 
-void GameBoard::setPiece(Piece *piece, int row, int col) { board[row][col] = piece; }
-
 Piece *GameBoard::getPiece(int row, int col) { return board[row][col]; }
+
+void GameBoard::clear()
+{
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            board[i][j] = nullptr;
+        }
+    }
+}
+void GameBoard::setPiece(Piece *piece, int row, int col) { board[row][col] = piece; }
 
 void GameBoard::drawPiece(Piece *piece, int row, int col)
 {

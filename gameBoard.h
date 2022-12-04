@@ -7,10 +7,7 @@ class Piece;
 
 class GameBoard
 {
-private:        
-    // all pieces in play
-    std::vector<Piece *> pieces;
-    
+private:            
     // board with all piece positions
     int rows, cols;
     std::vector<std::vector<Piece *>> board;
@@ -26,7 +23,7 @@ public:
 
     void drawPiece(Piece *piece, int row, int col);
     void erasePiece(Piece *piece, int row, int col);
-
+    void clear();
     void setPiece(Piece *piece, int row, int col);
     Piece *getPiece(int row, int col);
 };

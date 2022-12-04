@@ -18,7 +18,7 @@ public:
     ~PieceFactory();
 
     void updatePieces(std::string sequence);
-    void updateRandom(bool random);
+    void setRandom(bool random);
 
     Piece *getPiece(int level, bool heavy);
     static Piece *getPiece(char type, int level, bool heavy);

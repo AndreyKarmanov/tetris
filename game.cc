@@ -5,13 +5,22 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavy{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}
+    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavy{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, lastClearCount{0}
 {
     setLevel(level);
+    newPiece();
 }
 
 Game::~Game()
 {
+    for (auto p : oldPieces)
+    {
+        delete p;
+    }
+    if (currentPiece)
+    {
+        delete currentPiece;
+    }
     delete factory;
 }
 
@@ -32,6 +41,11 @@ void Game::move(int right, int down, bool recurCall)
     {
         move(0, 1, true);
     }
+}
+
+int Game::getLastClearCount() const
+{
+    return lastClearCount;
 }
 
 void Game::rotateCW()
@@ -66,6 +80,7 @@ void Game::rotateCCW()
 
 void Game::drop()
 {
+    oldPieces.push_back(currentPiece);
     while (!board->intersects(currentPiece, row + 1, col))
     {
         board->erasePiece(currentPiece, row, col);
@@ -107,6 +122,7 @@ void Game::newPiece()
 void Game::setLevel(int level)
 {
     this->level = level;
+    factory->setRandom(true);
     if (level == 1)
     {
         factory->updatePieces("IJLOTIJLOTSZ");
@@ -146,6 +162,30 @@ void Game::setPiece(char type)
     }
 }
 
+void Game::setRandom(bool random)
+{
+    factory->setRandom(random);
+}
+
+void Game::restart()
+{
+    board->clear();
+    for (auto p : oldPieces)
+    {
+        delete p;
+    }
+    oldPieces.clear();
+    if (currentPiece)
+    {
+        delete currentPiece;
+    }
+    currentPiece = nullptr;
+    gameOver = false;
+    dropsSinceClear = 0;
+    lastClearCount = 0;
+    newPiece();
+}
+
 bool Game::getGameOver()
 {
     return gameOver;
@@ -173,7 +213,6 @@ void Game::clearlines()
                 if (p->chSize(p->getSize() - 1) == 0)
                 {
                     score += (p->getLevel() + 1) * (p->getLevel() + 1);
-                    delete p;
                 }
                 board->setPiece(nullptr, i, j);
             }
