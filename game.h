@@ -18,8 +18,6 @@ private:
     int dropsSinceClear, lastClearCount;
     std::vector<Piece *> oldPieces;
 
-    // current piece
-    Piece *currentPiece;
     int row, col;
     void clearlines();
 

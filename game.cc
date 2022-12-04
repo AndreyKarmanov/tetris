@@ -118,7 +118,8 @@ void Game::drop()
 
 void Game::newPiece()
 {
-    currentPiece = factory->getPiece(level, heavyPieces);
+    currentPiece = nextPiece;
+    nextPiece = factory->getPiece(level, heavyPieces);
     col = (board->getCols() - currentPiece->getWidth()) / 2;
     row = 0;
     if (board->intersects(currentPiece, row, col))

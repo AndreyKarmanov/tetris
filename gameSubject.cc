@@ -45,6 +45,10 @@ int GameSubject::getLevel() const { return level; }
 // get the high score
 int GameSubject::getHiScore() const { return highScore; }
 
+Piece *GameSubject::getPiece() const { return currentPiece; }
+
+Piece *GameSubject::getNextPiece() const { return nextPiece; }
+
 std::string GameSubject::getName() const { return name; }
 
 // get the board

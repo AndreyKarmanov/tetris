@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
                     }
                     cout << "Invalid bonus" << endl;
                 }
+                games[(i + 1) % games.size()]->notifyObservers();
             }
         }
         else if (input == "levelup")
