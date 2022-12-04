@@ -167,6 +167,12 @@ void Game::setRandom(bool random)
     factory->setRandom(random);
 }
 
+void Game::setSequence(std::string sequence)
+{
+    factory->updatePieces(sequence);
+    factory->setRandom(false);
+}
+
 void Game::restart()
 {
     board->clear();

@@ -39,7 +39,7 @@ public:
     void setPiece(char type);
     void setHeavy(bool heavy);
     void setRandom(bool random);
-    void setSequence(std::string file);
+    void setSequence(std::string sequence);
 
     void restart();
     bool getGameOver();

@@ -6,15 +6,20 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <fstream>
+
+std::string getSequence(std::string filename);
 
 int main(int argc, char *argv[])
 {
     using namespace std;
     // new game setup:
     // name, level, rows, cols, random, seed, player#
-    vector<Game *> games{new Game("Andrey", 0, 18, 11, true, 0, 1)
-    // , new Game("John", 0, 18, 11, true, 0, 2)
-    // , new Game("Nolan", 0, 18, 11, true, 0, 3)
+    vector<Game *> games{
+        new Game("Andrey", 0, 18, 11, true, 0, 1)
+        // , new Game("John", 0, 18, 11, true, 0, 2)
+        // , new Game("Nolan", 0, 18, 11, true, 0, 3)
     };
 
     GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
@@ -75,7 +80,12 @@ int main(int argc, char *argv[])
             string file;
             if (cin >> file)
             {
-                // g->setSequence(file);
+                ifstream f(file);
+                if (f.is_open())
+                {
+                    g->setSequence(getSequence(file));
+                    f.close();
+                }
             }
         }
         else if (input == "norandom")
@@ -83,7 +93,12 @@ int main(int argc, char *argv[])
             string file;
             if (cin >> file)
             {
-                // g->setSequence(file);
+                ifstream f(file);
+                if (f.is_open())
+                {
+                    g->setSequence(getSequence(file));
+                    f.close();
+                }
             }
             g->setRandom(true);
         }
@@ -128,4 +143,16 @@ int main(int argc, char *argv[])
         delete g;
     }
     return 0;
+}
+
+std::string getSequence(std::ifstream &file)
+{
+    std::ostringstream iss;
+    std::string line;
+    while (file >> line)
+    {
+        // gets rid of spaces, kinda ugly tho
+        iss << line;
+    }
+    return iss.str();
 }
