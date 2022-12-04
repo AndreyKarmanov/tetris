@@ -10,7 +10,6 @@ class Piece;
 class Game : public GameSubject
 {
 private:
-    std::string name;
     int player;
 
     PieceFactory *factory;
@@ -41,7 +40,7 @@ public:
     void setHeavy(bool heavy);
     void setRandom(bool random);
     void setSequence(std::string file);
-    
+
     void restart();
     bool getGameOver();
 };

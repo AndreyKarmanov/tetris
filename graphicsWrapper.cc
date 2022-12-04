@@ -5,10 +5,12 @@
 #include "piece.h"
 
 GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwindow{500, 500}} {
+    int player = 0;
     for (auto game : games) {
-        observers.emplace_back(new GraphicsObserver{game, 10, game->getBoard()->getCols() * 5 + 20, w});
+        observers.emplace_back(new GraphicsObserver{game, player++ * (game->getBoard()->getCols() * 10 + 20), 0, w});
         game->attach(observers.back());
     }
+    w->fillRectangle(0, 0, 500, 500, Xwindow::Black);
 }
 
 GraphicsWrapper::GraphicsObserver::GraphicsObserver(GameSubject *game, int x, int y, Xwindow *w) : GameObserver{game}, x{x}, y{y}, w{w} {}
@@ -39,4 +41,10 @@ GraphicsWrapper::~GraphicsWrapper() {
         delete ob;
     }
     delete w;
+}
+
+void GraphicsWrapper::notifyAll() {
+    for (auto ob : observers) {
+        ob->notify();
+    }
 }

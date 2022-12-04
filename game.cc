@@ -5,7 +5,7 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{level, rows, cols}, name{name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavy{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, lastClearCount{0}
+    : GameSubject{level, rows, cols, name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavy{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, lastClearCount{0}
 {
     setLevel(level);
     newPiece();

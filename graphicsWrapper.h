@@ -26,7 +26,9 @@ private:
     
 public:
     GraphicsWrapper(std::vector<GameSubject *> games);
-    virtual ~GraphicsWrapper();
+    ~GraphicsWrapper();
+
+    void notifyAll();
 };
 
 #endif

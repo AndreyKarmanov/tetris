@@ -2,19 +2,25 @@
 #include "gameObserver.h"
 #include "gameBoard.h"
 
-GameSubject::GameSubject(int level, int rows, int cols) : board{new GameBoard(rows, cols)}, score{0}, level{level}, highScore{0} {}
+#include <string>
+
+GameSubject::GameSubject(int level, int rows, int cols, std::string name) : board{new GameBoard(rows, cols)}, score{0}, level{level}, highScore{0}, name{name} {}
 
 GameSubject::~GameSubject() { delete board; }
 
 // attach an observer to the subject
-void GameSubject::attach(GameObserver *o) {
+void GameSubject::attach(GameObserver *o)
+{
   observers.emplace_back(o);
 }
 
 // detach the observer from the subject
-void GameSubject::detach(GameObserver *o) {
-  for (auto it = observers.begin(); it != observers.end(); ++it) {
-    if (*it == o) {
+void GameSubject::detach(GameObserver *o)
+{
+  for (auto it = observers.begin(); it != observers.end(); ++it)
+  {
+    if (*it == o)
+    {
       observers.erase(it);
       break;
     }
@@ -22,8 +28,10 @@ void GameSubject::detach(GameObserver *o) {
 }
 
 // notify all observers of a change
-void GameSubject::notifyObservers() {
-  for (auto ob : observers) {
+void GameSubject::notifyObservers()
+{
+  for (auto ob : observers)
+  {
     ob->notify();
   }
 }
@@ -36,6 +44,8 @@ int GameSubject::getLevel() const { return level; }
 
 // get the high score
 int GameSubject::getHiScore() const { return highScore; }
+
+std::string GameSubject::getName() const { return name; }
 
 // get the board
 GameBoard *GameSubject::getBoard() const { return board; }
