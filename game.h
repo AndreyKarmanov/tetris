@@ -38,7 +38,7 @@ public:
     void setLevel(int level);
     void setPiece(char type);
     void setHeavy(bool heavy);
-    void setRandom(bool random);
+    void setRandom();
     void setSequence(std::string sequence);
 
     void restart();

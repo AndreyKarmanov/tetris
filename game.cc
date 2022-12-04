@@ -176,9 +176,9 @@ void Game::setHeavy(bool heavy)
     this->heavyAttack = heavy;
 }
 
-void Game::setRandom(bool random)
+void Game::setRandom()
 {
-    factory->setRandom(random);
+    factory->setRandom(true);
 }
 
 void Game::setSequence(std::string sequence)
@@ -256,4 +256,6 @@ void Game::clearlines()
     {
         highScore = score;
     }
+
+    lastClearCount = lines;
 }

@@ -9,7 +9,7 @@
 #include <sstream>
 #include <fstream>
 
-std::string getSequence(std::string filename);
+std::string getSequence(std::ifstream &file);
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     // name, level, rows, cols, random, seed, player#
     vector<Game *> games{
         new Game("Andrey", 0, 18, 11, true, 0, 1)
-        // , new Game("John", 0, 18, 11, true, 0, 2)
+        , new Game("John", 0, 18, 11, true, 0, 2)
         // , new Game("Nolan", 0, 18, 11, true, 0, 3)
     };
 
@@ -88,20 +88,11 @@ int main(int argc, char *argv[])
         }
         else if (input == "random")
         {
-            g->setRandom(true);
+            g->setRandom();
         }
         else if (input == "sequence")
         {
-            string file;
-            if (cin >> file)
-            {
-                ifstream f(file);
-                if (f.is_open())
-                {
-                    g->setSequence(getSequence(file));
-                    f.close();
-                }
-            }
+            // needs a sequenc of commands
         }
         else if (input == "norandom")
         {
@@ -111,11 +102,10 @@ int main(int argc, char *argv[])
                 ifstream f(file);
                 if (f.is_open())
                 {
-                    g->setSequence(getSequence(file));
+                    g->setSequence(getSequence(f));
                     f.close();
                 }
             }
-            g->setRandom(true);
         }
         else if (input == "I")
         {
@@ -149,6 +139,11 @@ int main(int argc, char *argv[])
         {
             break;
         }
+        else 
+        {
+            cout << "Invalid command" << endl;
+            --i;
+        }
         g->notifyObservers();
     }
 
@@ -166,7 +161,6 @@ std::string getSequence(std::ifstream &file)
     std::string line;
     while (file >> line)
     {
-        // gets rid of spaces, kinda ugly tho
         iss << line;
     }
     return iss.str();
