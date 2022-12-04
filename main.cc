@@ -17,8 +17,7 @@ int main(int argc, char *argv[])
     // new game setup:
     // name, level, rows, cols, random, seed, player#
     vector<Game *> games{
-        new Game("Andrey", 0, 18, 11, true, 0, 1)
-        , new Game("John", 0, 18, 11, true, 0, 2)
+        new Game("Andrey", 0, 18, 11, true, 0, 1), new Game("John", 0, 18, 11, true, 0, 2)
         // , new Game("Nolan", 0, 18, 11, true, 0, 3)
     };
 
@@ -54,23 +53,29 @@ int main(int argc, char *argv[])
         else if (input == "drop")
         {
             g->drop();
-            if (g->getLastClearCount() > 2)
+            if (g->getLastClearCount() >= 2)
             {
                 cout << "Player " << g->getName() << " has cleared " << g->getLastClearCount() << " lines!" << endl;
                 cout << "Choose a bonus: heavy, blind, or force [IJLOTSZ]" << endl;
-                cin >> input;
-                if (input == "heavy")
+                while (cin >> input)
                 {
-                     games[(i + 1) % games.size()]->setHeavy(true);
-                }
-                else if (input == "blind")
-                {
-                    //  games[(i + 1) % games.size()]->setBlind(true);
-                }
-                else if (input == "force")
-                {
-                    cin >> input;
-                     games[(i + 1) % games.size()]->setPiece(input[0]);
+                    if (input == "heavy")
+                    {
+                        games[(i + 1) % games.size()]->setHeavy(true);
+                        break;
+                    }
+                    else if (input == "blind")
+                    {
+                        //  games[(i + 1) % games.size()]->setBlind(true);
+                        break;
+                    }
+                    else if (input == "force")
+                    {
+                        cin >> input;
+                        games[(i + 1) % games.size()]->setPiece(input[0]);
+                        break;
+                    }
+                    cout << "Invalid bonus" << endl;
                 }
             }
         }
@@ -139,7 +144,7 @@ int main(int argc, char *argv[])
         {
             break;
         }
-        else 
+        else
         {
             cout << "Invalid command" << endl;
             --i;
