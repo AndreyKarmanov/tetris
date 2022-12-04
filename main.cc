@@ -61,16 +61,16 @@ int main(int argc, char *argv[])
                 cin >> input;
                 if (input == "heavy")
                 {
-                    g->setHeavy(true);
+                     games[(i + 1) % games.size()]->setHeavy(true);
                 }
                 else if (input == "blind")
                 {
-                    // g->setBlind(true);
+                    //  games[(i + 1) % games.size()]->setBlind(true);
                 }
                 else if (input == "force")
                 {
                     cin >> input;
-                    g->setPiece(input[0]);
+                     games[(i + 1) % games.size()]->setPiece(input[0]);
                 }
             }
         }
