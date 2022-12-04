@@ -56,7 +56,22 @@ int main(int argc, char *argv[])
             g->drop();
             if (g->getLastClearCount() > 2)
             {
-                // TODO: activate special ability
+                cout << "Player " << g->getName() << " has cleared " << g->getLastClearCount() << " lines!" << endl;
+                cout << "Choose a bonus: heavy, blind, or force [IJLOTSZ]" << endl;
+                cin >> input;
+                if (input == "heavy")
+                {
+                    g->setHeavy(true);
+                }
+                else if (input == "blind")
+                {
+                    // g->setBlind(true);
+                }
+                else if (input == "force")
+                {
+                    cin >> input;
+                    g->setPiece(input[0]);
+                }
             }
         }
         else if (input == "levelup")

@@ -14,7 +14,7 @@ private:
 
     PieceFactory *factory;
     bool gameOver;
-    bool heavy, splitting, blind, heavyPieces;
+    bool heavyAttack, splitting, blind, heavyPieces;
     int dropsSinceClear, lastClearCount;
     std::vector<Piece *> oldPieces;
 

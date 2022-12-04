@@ -5,7 +5,7 @@
 #include "gameBoard.h"
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
-    : GameSubject{level, rows, cols, name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavy{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, lastClearCount{0}
+    : GameSubject{level, rows, cols, name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavyAttack{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, lastClearCount{0}
 {
     setLevel(level);
     newPiece();
@@ -29,6 +29,10 @@ void Game::move(int right, int down, bool recurCall)
 
     if (board->intersects(currentPiece, row + down, col + right))
     {
+        if (heavyAttack && recurCall)
+        {
+            drop();
+        }
         return;
     }
 
@@ -38,6 +42,11 @@ void Game::move(int right, int down, bool recurCall)
     board->drawPiece(currentPiece, row, col);
 
     if (currentPiece->isHeavy() && !recurCall)
+    {
+        move(0, 1, true);
+    }
+
+    if (heavyAttack && !recurCall)
     {
         move(0, 1, true);
     }
@@ -160,6 +169,11 @@ void Game::setPiece(char type)
     {
         delete temp;
     }
+}
+
+void Game::setHeavy(bool heavy)
+{
+    this->heavyAttack = heavy;
 }
 
 void Game::setRandom(bool random)
