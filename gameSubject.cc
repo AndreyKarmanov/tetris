@@ -1,6 +1,7 @@
 #include "gameSubject.h"
 #include "gameObserver.h"
 #include "gameBoard.h"
+#include "piece.h"
 
 #include <string>
 

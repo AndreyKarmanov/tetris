@@ -15,6 +15,7 @@ private:
     private:
         int x, y;
         Xwindow *w;
+        std::vector<std::vector<int>> currBoard;
 
     public:
         GraphicsObserver(GameSubject *game, int x, int y, Xwindow *w);

@@ -118,6 +118,10 @@ void Game::drop()
 
 void Game::newPiece()
 {
+    if (nextPiece == nullptr)
+    {
+        nextPiece = factory->getPiece(level, heavyPieces);
+    }
     currentPiece = nextPiece;
     nextPiece = factory->getPiece(level, heavyPieces);
     col = (board->getCols() - currentPiece->getWidth()) / 2;

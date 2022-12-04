@@ -4,6 +4,7 @@
 #include <string>
 class GameObserver;
 class GameBoard;
+class Piece;
 
 class GameSubject
 {
