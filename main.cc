@@ -97,7 +97,10 @@ int main(int argc, char *argv[])
     file1.close();
     file2.close();
 
-    GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
+    if (!textOnly)
+    {
+        GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
+    }
 
     string input;
     int multiplier;
