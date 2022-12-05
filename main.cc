@@ -96,17 +96,17 @@ int main(int argc, char *argv[])
         };
     file1.close();
     file2.close();
-
+    GraphicsWrapper *gw;
     if (!textOnly)
     {
-        GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
+        *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
+        gw->notifyAll();
     }
 
     string input;
     int multiplier;
     stringstream ss;
 
-    gw->notifyAll();
     for (int i = 0;; i = (i + 1) % games.size())
     {
         Game *g = games[i];
@@ -260,8 +260,11 @@ int main(int argc, char *argv[])
         }
         g->notifyObservers();
     }
-
-    delete gw;
+    
+    if (!textOnly)
+    {
+        delete gw;
+    }
     for (Game *g : games)
     {
         delete g;
