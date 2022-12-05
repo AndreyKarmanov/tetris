@@ -29,7 +29,7 @@ public:
   Piece *getPiece() const;
   Piece *getNextPiece() const;
   std::string getName() const;
-  GameBoard *getBoard() const;
+  virtual GameBoard *getBoard() const;
 
   virtual ~GameSubject();
 };

@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
                         }
                         else if (input == "blind")
                         {
-                            //  games[(i + 1) % games.size()]->setBlind(true);
+                            games[(i + 1) % games.size()]->setBlind(true);
                             break;
                         }
                         else if (input == "force")

@@ -3,12 +3,13 @@
 #include "piece.h"
 #include "pieceFactory.h"
 #include "gameBoard.h"
-
+#include "blindBoard.h"
 #include <algorithm>
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, std::string sequence)
-    : GameSubject{level, rows, cols, name}, player{player}, factory{new PieceFactory{sequence, random, seed}}, 
-    gameOver{false}, heavyAttack{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, lastClearCount{0}, level0Seq{sequence}
+    : GameSubject{level, rows, cols, name}, player{player}, factory{new PieceFactory{sequence, random, seed}},
+    blindBoard{new BlindBoard(board, 3, 3, 9, 6)}, gameOver{false}, heavyAttack{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, 
+    lastClearCount{0}, level0Seq{sequence}
 {
     setLevel(level);
     newPiece();
@@ -117,6 +118,7 @@ void Game::drop()
     {
         newPiece();
     }
+    blind = false;
 }
 
 void Game::newPiece()
@@ -144,6 +146,7 @@ void Game::setLevel(int level)
     if (level == 0)
     {
         factory->updatePieces(level0Seq);
+        factory->setRandom(false);
         heavyPieces = splitting = false;
     }
     if (level == 1)
@@ -190,6 +193,11 @@ void Game::setHeavy(bool heavy)
     this->heavyAttack = heavy;
 }
 
+void Game::setBlind(bool blind)
+{
+    this->blind = blind;
+}
+
 void Game::setRandom()
 {
     factory->setRandom(true);
@@ -199,6 +207,15 @@ void Game::setSequence(std::string sequence)
 {
     factory->updatePieces(sequence);
     factory->setRandom(false);
+}
+
+GameBoard *Game::getBoard() const
+{
+    if (blind)
+    {
+        return blindBoard;
+    }
+    return board;
 }
 
 void Game::restart()

@@ -14,7 +14,7 @@ private:
     
 public:
     GameBoard(int rows, int cols);
-    ~GameBoard();
+    virtual ~GameBoard();
 
     int getRows();
     int getCols();
@@ -25,7 +25,7 @@ public:
     void erasePiece(Piece *piece, int row, int col);
     void clear();
     void setPiece(Piece *piece, int row, int col);
-    Piece *getPiece(int row, int col);
+    virtual Piece *getPiece(int row, int col);
 };
 
 #endif

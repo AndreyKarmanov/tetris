@@ -13,6 +13,7 @@ private:
     int player;
 
     PieceFactory *factory;
+    GameBoard *blindBoard;
     bool gameOver;
     bool heavyAttack, splitting, blind, heavyPieces;
     int dropsSinceClear, lastClearCount;
@@ -37,8 +38,11 @@ public:
     void setLevel(int level);
     void setPiece(char type);
     void setHeavy(bool heavy);
+    void setBlind(bool blind);
     void setRandom();
     void setSequence(std::string sequence);
+
+    GameBoard *getBoard() const override;
 
     void restart();
     bool getGameOver();
