@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     GraphicsWrapper *gw;
     if (!textOnly)
     {
-        *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
+        gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
         gw->notifyAll();
     }
 
@@ -260,7 +260,7 @@ int main(int argc, char *argv[])
         }
         g->notifyObservers();
     }
-    
+
     if (!textOnly)
     {
         delete gw;
