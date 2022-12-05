@@ -4,6 +4,8 @@
 #include "pieceFactory.h"
 #include "gameBoard.h"
 
+#include <algorithm>
+
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, int player)
     : GameSubject{level, rows, cols, name}, player{player}, factory{new PieceFactory{"STLOZSI", random, seed}}, gameOver{false}, heavyAttack{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, lastClearCount{0}
 {
@@ -135,6 +137,7 @@ void Game::newPiece()
 
 void Game::setLevel(int level)
 {
+    level = std::min(4, std::max(0, level));
     this->level = level;
     factory->setRandom(true);
     if (level == 1)

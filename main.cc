@@ -8,13 +8,41 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <map>
 
 std::string getSequence(std::ifstream &file);
+
+void getCommand(std::stringstream &ss, std::string &command, int &multiplier);
+void loadCommands(std::stringstream &ss, std::ifstream &file);
+
+std::map<std::string, std::string> commands{
+    {"left", "left"},
+    {"right", "right"},
+    {"down", "down"},
+    {"clockwise", "clockwise"},
+    {"counterclockwise", "counterclockwise"},
+    {"drop", "drop"},
+    {"levelup", "levelup"},
+    {"leveldown", "leveldown"},
+    {"norandom", "norandom"},
+    {"random", "random"},
+    {"sequence", "sequence"},
+    {"restart", "restart"},
+    {"I", "I"},
+    {"J", "J"},
+    {"L", "L"},
+    {"O", "O"},
+    {"S", "S"},
+    {"Z", "Z"},
+    {"T", "T"},
+    {"heavy", "heavy"},
+    {"blind", "blind"},
+    {"force", "force"},
+    {"", ""}};
 
 int main(int argc, char *argv[])
 {
     using namespace std;
-    // new game setup:
     // name, level, rows, cols, random, seed, player#
     vector<Game *> games{
         new Game("Andrey", 0, 18, 11, true, 0, 1), new Game("John", 0, 18, 11, true, 0, 2)
@@ -22,71 +50,93 @@ int main(int argc, char *argv[])
     };
 
     GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
+
     string input;
-    Game *g;
+    int multiplier;
+    stringstream ss;
+
     gw->notifyAll();
     for (int i = 0;; i = (i + 1) % games.size())
     {
-        g = games[i];
+        Game *g = games[i];
         cout << "Player " << g->getName() << "'s turn" << endl;
-        cin >> input;
+        getCommand(ss, input, multiplier);
         if (input == "left")
         {
-            g->move(-1, 0);
+            for (int j = 0; j < multiplier; ++j)
+            {
+                g->move(-1, 0);
+            }
         }
         else if (input == "right")
         {
-            g->move(1, 0);
+            for (int j = 0; j < multiplier; ++j)
+            {
+                g->move(1, 0);
+            }
         }
         else if (input == "down")
         {
-            g->move(0, 1);
+            for (int j = 0; j < multiplier; ++j)
+            {
+                g->move(0, 1);
+            }
         }
         else if (input == "CW")
         {
-            g->rotateCW();
+            for (int j = 0; j < multiplier; ++j)
+            {
+                g->rotateCW();
+            }
         }
         else if (input == "CCW")
         {
-            g->rotateCCW();
+            for (int j = 0; j < multiplier; ++j)
+            {
+                g->rotateCCW();
+            }
         }
         else if (input == "drop")
         {
-            g->drop();
-            if (g->getLastClearCount() >= 2)
+            for (int j = 0; j < multiplier; ++j)
             {
-                cout << "Player " << g->getName() << " has cleared " << g->getLastClearCount() << " lines!" << endl;
-                cout << "Choose a bonus: heavy, blind, or force [IJLOTSZ]" << endl;
-                while (cin >> input)
+                g->drop();
+                if (g->getLastClearCount() >= 2)
                 {
-                    if (input == "heavy")
+                    cout << "Player " << g->getName() << " has cleared " << g->getLastClearCount() << " lines!" << endl;
+                    cout << "Choose a bonus: heavy, blind, or force [IJLOTSZ]" << endl;
+                    while (true)
                     {
-                        games[(i + 1) % games.size()]->setHeavy(true);
-                        break;
+                        getCommand(ss, input, multiplier);
+                        if (input == "heavy")
+                        {
+                            games[(i + 1) % games.size()]->setHeavy(true);
+                            break;
+                        }
+                        else if (input == "blind")
+                        {
+                            //  games[(i + 1) % games.size()]->setBlind(true);
+                            break;
+                        }
+                        else if (input == "force")
+                        {
+                            getCommand(ss, input, multiplier);
+                            games[(i + 1) % games.size()]->setPiece(input[0]);
+                            break;
+                        }
+                        cout << "Invalid bonus" << endl;
                     }
-                    else if (input == "blind")
-                    {
-                        //  games[(i + 1) % games.size()]->setBlind(true);
-                        break;
-                    }
-                    else if (input == "force")
-                    {
-                        cin >> input;
-                        games[(i + 1) % games.size()]->setPiece(input[0]);
-                        break;
-                    }
-                    cout << "Invalid bonus" << endl;
+                    games[(i + 1) % games.size()]->notifyObservers();
                 }
-                games[(i + 1) % games.size()]->notifyObservers();
             }
         }
         else if (input == "levelup")
         {
-            g->setLevel(g->getLevel() + 1);
+            g->setLevel(g->getLevel() + 1 * multiplier);
         }
         else if (input == "leveldown")
         {
-            g->setLevel(g->getLevel() - 1);
+            g->setLevel(g->getLevel() - 1 * multiplier);
         }
         else if (input == "restart")
         {
@@ -98,7 +148,7 @@ int main(int argc, char *argv[])
         }
         else if (input == "sequence")
         {
-            // needs a sequenc of commands
+            // needs a sequence of commands
         }
         else if (input == "norandom")
         {
@@ -159,6 +209,20 @@ int main(int argc, char *argv[])
         delete g;
     }
     return 0;
+}
+
+void getCommand(std::stringstream &ss, std::string &command, int &multiplier)
+{
+    using namespace std;
+    string input;
+    cin >> input;
+    command = input.substr(input.find_first_not_of("0123456789"), input.length());
+    if (isdigit(input[0]))
+    {
+        multiplier = stoi(input.substr(0, input.find_first_not_of("0123456789")));
+    }
+
+    cout << "Command: " << command << " Multiplier: " << multiplier << endl;
 }
 
 std::string getSequence(std::ifstream &file)
