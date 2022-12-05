@@ -16,6 +16,7 @@ private:
     bool gameOver;
     bool heavyAttack, splitting, blind, heavyPieces;
     int dropsSinceClear, lastClearCount;
+    std::string level0Seq;
     std::vector<Piece *> oldPieces;
 
     int row, col;
