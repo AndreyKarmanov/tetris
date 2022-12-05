@@ -133,14 +133,14 @@ int main(int argc, char *argv[])
                 g->move(0, 1);
             }
         }
-        else if (input == "CW")
+        else if (input == "clockwise")
         {
             for (int j = multiplier; j > 0; --j)
             {
                 g->rotateCW();
             }
         }
-        else if (input == "CCW")
+        else if (input == "counterclockwise")
         {
             for (int j = multiplier; j > 0; --j)
             {
