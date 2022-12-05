@@ -44,11 +44,58 @@ std::map<std::string, std::string> commands{
 int main(int argc, char *argv[])
 {
     using namespace std;
+    // command line args
+    string scriptfile1 = "sequence1.txt";
+    string scriptfile2 = "sequence2.txt";
+    bool textOnly = false;
+    int seedNum = 0;
+    int startLevel = 0;
+    int rows = 18;
+    int cols = 11;
+
+    for (int i = 1; i < argc; ++i)
+    {
+        string arg = argv[i];
+        if (arg == "-text")
+        {
+            textOnly = true;
+        }
+        else if (arg == "-seed")
+        {
+            seedNum = stoi(argv[++i]);
+        }
+        else if (arg == "-scriptfile1")
+        {
+            scriptfile1 = argv[++i];
+        }
+        else if (arg == "-scriptfile2")
+        {
+            scriptfile2 = argv[++i];
+        }
+        else if (arg == "-startlevel")
+        {
+            startLevel = stoi(argv[++i]);
+        }
+        else if (arg == "-rows")
+        {
+            rows = stoi(argv[++i]);
+        }
+        else if (arg == "-cols")
+        {
+            cols = stoi(argv[++i]);
+        }
+    }
+    ifstream file1(scriptfile1);
+    ifstream file2(scriptfile2);
     // name, level, rows, cols, random, seed, player#
-    vector<Game *> games{
-        new Game("Andrey", 0, 18, 11, true, 0, 1), new Game("John", 0, 18, 11, true, 0, 2)
-        // , new Game("Nolan", 0, 18, 11, true, 0, 3)
-    };
+    vector<Game *>
+        games{
+            new Game("Andrey", startLevel, rows, cols, true, seedNum, getSequence(file1)),
+            new Game("John", startLevel, rows, cols, true, seedNum, getSequence(file2))
+            // , new Game("Nolan", 0, 18, 11, true, 0, 3)
+        };
+    file1.close();
+    file2.close();
 
     GraphicsWrapper *gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
 

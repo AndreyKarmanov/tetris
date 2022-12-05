@@ -22,7 +22,7 @@ private:
     void clearlines();
 
 public:
-    Game(std::string name, int level, int rows, int cols, bool random, int seed, int player);
+    Game(std::string name, int level, int rows, int cols, bool random, int seed, std::string sequence);
     ~Game();
 
     int getLastClearCount() const;
