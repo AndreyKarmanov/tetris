@@ -284,9 +284,10 @@ std::string getSequence(std::ifstream &file)
 void loadCommandSequence(std::stringstream &ss, std::ifstream &file)
 {
     std::string line;
+    ss.str("");
+    ss.clear();
     while (getline(file, line))
     {
-        ss.str(line);
-        ss.clear();
+        ss.str(ss.str() + line);
     }
 }
