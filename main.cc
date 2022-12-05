@@ -11,6 +11,7 @@
 #include <map>
 
 std::string getSequence(std::ifstream &file);
+void loadCommandSequence(std::stringstream &ss, std::ifstream &file);
 
 void getCommand(std::stringstream &ss, std::string &command, int &multiplier);
 void loadCommands(std::stringstream &ss, std::ifstream &file);
@@ -63,42 +64,42 @@ int main(int argc, char *argv[])
         getCommand(ss, input, multiplier);
         if (input == "left")
         {
-            for (int j = 0; j < multiplier; ++j)
+            for (int j = multiplier; j > 0; --j)
             {
                 g->move(-1, 0);
             }
         }
         else if (input == "right")
         {
-            for (int j = 0; j < multiplier; ++j)
+            for (int j = multiplier; j > 0; --j)
             {
                 g->move(1, 0);
             }
         }
         else if (input == "down")
         {
-            for (int j = 0; j < multiplier; ++j)
+            for (int j = multiplier; j > 0; --j)
             {
                 g->move(0, 1);
             }
         }
         else if (input == "CW")
         {
-            for (int j = 0; j < multiplier; ++j)
+            for (int j = multiplier; j > 0; --j)
             {
                 g->rotateCW();
             }
         }
         else if (input == "CCW")
         {
-            for (int j = 0; j < multiplier; ++j)
+            for (int j = multiplier; j > 0; --j)
             {
                 g->rotateCCW();
             }
         }
         else if (input == "drop")
         {
-            for (int j = 0; j < multiplier; ++j)
+            for (int j = multiplier; j > 0; --j)
             {
                 g->drop();
                 if (g->getLastClearCount() >= 2)
@@ -148,7 +149,14 @@ int main(int argc, char *argv[])
         }
         else if (input == "sequence")
         {
-            // needs a sequence of commands
+            string file;
+            getCommand(ss, file, multiplier);
+            ifstream f(file);
+            if (f.is_open())
+            {
+                loadCommandSequence(ss, f);
+                f.close();
+            }
         }
         else if (input == "norandom")
         {
@@ -211,17 +219,54 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+std::string findSimilarCommand(std::string command)
+{
+    bool foundCommand = false;
+    std::string similarCommand = command;
+    for (auto pair : commands)
+    {
+        if (pair.first.find(command) == 0)
+        {
+            if (foundCommand)
+            {
+                return command;
+            }
+            else
+            {
+                foundCommand = true;
+                similarCommand = pair.second;
+            }
+        }
+    }
+    return similarCommand;
+}
+
 void getCommand(std::stringstream &ss, std::string &command, int &multiplier)
 {
     using namespace std;
     string input;
-    cin >> input;
-    command = input.substr(input.find_first_not_of("0123456789"), input.length());
+    if (ss.eof() || ss.str().empty())
+    {
+        getline(cin, input);
+        ss.str(input);
+        ss.clear();
+    }
+    ss >> input;
+    int nonDigit = input.find_first_not_of("0123456789");
+    multiplier = 1;
+
+    if (nonDigit < input.size())
+    {
+        command = findSimilarCommand(input.substr(nonDigit, input.length()));
+    }
+    else
+    {
+        command = findSimilarCommand(input);
+    }
     if (isdigit(input[0]))
     {
-        multiplier = stoi(input.substr(0, input.find_first_not_of("0123456789")));
+        multiplier = stoi(input.substr(0, nonDigit));
     }
-
     cout << "Command: " << command << " Multiplier: " << multiplier << endl;
 }
 
@@ -234,4 +279,14 @@ std::string getSequence(std::ifstream &file)
         iss << line;
     }
     return iss.str();
+}
+
+void loadCommandSequence(std::stringstream &ss, std::ifstream &file)
+{
+    std::string line;
+    while (getline(file, line))
+    {
+        ss.str(line);
+        ss.clear();
+    }
 }
