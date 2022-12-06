@@ -114,24 +114,17 @@ int main(int argc, char *argv[])
         getCommand(ss, input, multiplier);
         if (input == "left")
         {
-            for (int j = multiplier; j > 0; --j)
-            {
-                g->move(-1, 0);
-            }
+
+            g->move(-1, 0, multiplier);
         }
         else if (input == "right")
         {
-            for (int j = multiplier; j > 0; --j)
-            {
-                g->move(1, 0);
-            }
+
+            g->move(1, 0, multiplier);
         }
         else if (input == "down")
         {
-            for (int j = multiplier; j > 0; --j)
-            {
-                g->move(0, 1);
-            }
+            g->move(0, 1, multiplier);
         }
         else if (input == "clockwise")
         {

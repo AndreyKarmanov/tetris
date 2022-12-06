@@ -56,7 +56,7 @@ public:
     bool getGameOver();
 
     // Moves the current piece
-    void move(int right, int down, bool recurCall = false);
+    void move(int right, int down, int count = 1, bool autoMove = false);
     
     // Drops the current piece
     void drop();

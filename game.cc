@@ -49,40 +49,39 @@ bool Game::getGameOver()
 
 // Moves the current piece right or left by the given amount
 // Recursively calls itself if the piece is heavy
-void Game::move(int right, int down, bool recurCall)
+void Game::move(int right, int down, int count, bool autoMove)
 {
-
-    // Checks if the piece can move in the given direction
-    if (board->intersects(currentPiece, row + down, col + right))
+    while (count > 0 && !board->intersects(currentPiece, row + down, col + right))
     {
-        // Performs drop if the move was called due to heavyAttack
-        if (heavyAttack && recurCall && down == 1)
+        // Erases the piece from the board
+        board->erasePiece(currentPiece, row, col);
+
+        // Moves the piece
+        row += down;
+        col += right;
+
+        // Draws the piece on the board
+        board->drawPiece(currentPiece, row, col);
+
+        // Decrements the count
+        --count;
+    }
+
+    if (heavyAttack && !autoMove)
+    {
+        // Moves the piece down if it is heavy
+        int temp = row;
+        move(0, 1, 2, true);
+        if (temp > row - 2)
         {
             drop();
         }
-        return;
     }
-
-    // Erases the piece from the board
-    board->erasePiece(currentPiece, row, col);
-
-    // Updates the row and col
-    row += down;
-    col += right;
-
-    // Draws the piece on the board, in the new position
-    board->drawPiece(currentPiece, row, col);
-
-    // Performs a down move if piece is heavy
-    if (currentPiece->isHeavy() && !recurCall)
+    
+    if (currentPiece->isHeavy() && !autoMove)
     {
-        move(0, 1, true);
-    }
-
-    // Performs a down move if under heavyAttack
-    if (heavyAttack && !recurCall && down == 0)
-    {
-        move(0, 1, true);
+        // Moves the piece down if it is heavy
+        move(0, 1, 1, true);
     }
 }
 
