@@ -5,19 +5,22 @@
 
 #include <string>
 
+// Constructor
 GameSubject::GameSubject(int level, int rows, int cols, std::string name) : board{new GameBoard(rows, cols)}, score{0}, level{level}, highScore{0}, name{name} {}
 
+// Destructor
 GameSubject::~GameSubject() { delete board; }
 
-// attach an observer to the subject
+// Attach an observer to the subject
 void GameSubject::attach(GameObserver *o)
 {
   observers.emplace_back(o);
 }
 
-// detach the observer from the subject
+// Detach the observer from the subject
 void GameSubject::detach(GameObserver *o)
 {
+  // Find the observer in the vector and remove it
   for (auto it = observers.begin(); it != observers.end(); ++it)
   {
     if (*it == o)
@@ -28,29 +31,33 @@ void GameSubject::detach(GameObserver *o)
   }
 }
 
-// notify all observers of a change
+// Notify all observers of a change
 void GameSubject::notifyObservers()
 {
+  // notify all observers
   for (auto ob : observers)
   {
     ob->notify();
   }
 }
 
-// get the score
+// Get the score
 int GameSubject::getScore() const { return score; }
 
-// get the level
+// Get the level
 int GameSubject::getLevel() const { return level; }
 
-// get the high score
+// Get the high score
 int GameSubject::getHiScore() const { return highScore; }
 
+// Get the current piece
 Piece *GameSubject::getPiece() const { return currentPiece; }
 
+// Get the next piece
 Piece *GameSubject::getNextPiece() const { return nextPiece; }
 
+// Get the name of the player
 std::string GameSubject::getName() const { return name; }
 
-// get the board
+// Get the board
 GameBoard *GameSubject::getBoard() const { return board; }

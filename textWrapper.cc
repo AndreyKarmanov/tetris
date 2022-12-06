@@ -1,4 +1,4 @@
-#include "textObserver.h"
+#include "textWrapper.h"
 #include "gameSubject.h"
 #include "gameBoard.h"
 #include "piece.h"
@@ -7,9 +7,20 @@
 #include <iostream>
 #include <sstream>
 
-TextObserver::TextObserver(GameSubject *game) : GameObserver{game} {}
+TextWrapper::TextWrapper(std::vector<GameSubject *> games)
+{
+    int player = 0;
+    for (auto game : games)
+    {
+        observers.emplace_back(new TextObserver{game});
+        game->attach(observers.back());
+    }
+}
 
-void TextObserver::notify() {
+TextWrapper::TextObserver::TextObserver(GameSubject *game) : GameObserver{game} {}
+
+void TextWrapper::TextObserver::notify()
+{
     GameBoard *board = game->getBoard();
     std::stringstream ss;
     ss << "+";
@@ -21,6 +32,25 @@ void TextObserver::notify() {
     ss << "| Level   : " << game->getLevel() << std::endl;
     ss << "| Score   : " << game->getScore() << std::endl;
     ss << "| Hi Score: " << game->getHiScore() << std::endl;
+
+    Piece *np = game->getNextPiece();
+    auto grid = np->getGrid();
+    for (auto vec : grid)
+    {
+        for (auto cell : vec)
+        {
+            if (cell)
+            {
+                ss << np->getType();
+            }
+            else
+            {
+                ss << " ";
+            }
+        }
+        ss << std::endl;
+    }
+
     ss << "+";
     for (int cols = 0; cols < board->getCols(); ++cols)
     {
@@ -53,4 +83,20 @@ void TextObserver::notify() {
     std::cout << ss.str();
 }
 
-TextObserver::~TextObserver() {}
+TextWrapper::TextObserver::~TextObserver() {}
+
+TextWrapper::~TextWrapper()
+{
+    for (auto ob : observers)
+    {
+        delete ob;
+    }
+}
+
+void TextWrapper::notifyAll()
+{
+    for (auto ob : observers)
+    {
+        ob->notify();
+    }
+}
