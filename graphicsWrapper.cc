@@ -78,7 +78,6 @@ void GraphicsWrapper::GraphicsObserver::notify()
             }
         }
     }
-
     // a white rectangle is drawn behind so that the black text is visible
     w->fillRectangle(x, y + 20 + (board->getRows() * 10), board->getCols() * 10, 100, Xwindow::White);
     // each stat is drawn
@@ -105,4 +104,6 @@ void GraphicsWrapper::GraphicsObserver::notify()
             }
         }
     }
+}
+
 }
