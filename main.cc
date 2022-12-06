@@ -1,6 +1,7 @@
 #include "piece.h"
 #include "graphicsWrapper.h"
 #include "textWrapper.h"
+#include "pieceFactory.h"
 #include "game.h"
 
 #include <vector>
@@ -9,6 +10,8 @@
 #include <sstream>
 #include <fstream>
 #include <map>
+
+void loadCustomPieces(std::ifstream &file);
 
 std::string getSequence(std::ifstream &file);
 void loadCommandSequence(std::stringstream &ss, std::ifstream &file);
@@ -47,6 +50,7 @@ int main(int argc, char *argv[])
     // command line args
     string scriptfile1 = "sequence1.txt";
     string scriptfile2 = "sequence2.txt";
+    string customPieceFile = "";
     bool textOnly = false;
     int seedNum = 0;
     int startLevel = 0;
@@ -84,7 +88,27 @@ int main(int argc, char *argv[])
         {
             cols = stoi(argv[++i]);
         }
+        else if (arg == "-custom")
+        {
+            customPieceFile = argv[++i];
+        }
+        else if (arg == "-help")
+        {
+            cout << "Usage: ./quadris [-text] [-seed n] [-scriptfile1 f] [-scriptfile2 f] [-startlevel n] [-rows n] [-cols n] [-custom f]" << endl;
+            return 0;
+        }
     }
+
+    if (customPieceFile != "")
+    {
+        ifstream f(customPieceFile);
+        if (f.is_open())
+        {
+            PieceFactory::addPieces(f);
+            f.close();
+        }
+    }
+
     ifstream file1(scriptfile1);
     ifstream file2(scriptfile2);
     // name, level, rows, cols, random, seed, player#
@@ -170,6 +194,11 @@ int main(int argc, char *argv[])
                         else if (input == "force")
                         {
                             getCommand(ss, input, multiplier);
+                            if (commands.find(input) == commands.end())
+                            {
+                                cout << "Invalid bonus" << endl;
+                                continue;
+                            }
                             games[(i + 1) % games.size()]->setPiece(input[0]);
                             break;
                         }
@@ -219,40 +248,34 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        else if (input == "I")
-        {
-            g->setPiece('I');
-        }
-        else if (input == "J")
-        {
-            g->setPiece('J');
-        }
-        else if (input == "L")
-        {
-            g->setPiece('L');
-        }
-        else if (input == "O")
-        {
-            g->setPiece('O');
-        }
-        else if (input == "S")
-        {
-            g->setPiece('S');
-        }
-        else if (input == "Z")
-        {
-            g->setPiece('Z');
-        }
-        else if (input == "T")
-        {
-            g->setPiece('T');
-        }
         else if (input == "quit")
         {
             break;
         }
+        else if (input == "rename")
+        {
+            string name;
+            getCommand(ss, name, multiplier);
+            string command;
+            getCommand(ss, command, multiplier);
+
+            if (commands.count(command) == 0)
+            {
+                commands[command] = name;
+            }
+            else
+            {
+                cout << "Command already exists" << endl;
+            }
+            --i;
+        }
         else
         {
+            if (input.length() == 1)
+            {
+                g->setPiece(input[0]);
+            }
+
             cout << "Invalid command" << endl;
             --i;
         }
@@ -281,7 +304,9 @@ std::string findSimilarCommand(std::string command)
             if (foundCommand)
             {
                 return command;
-            } else {
+            }
+            else
+            {
                 foundCommand = true;
                 similarCommand = pair.second;
             }
@@ -301,7 +326,7 @@ void getCommand(std::stringstream &ss, std::string &command, int &multiplier)
         ss.clear();
     }
     ss >> input;
-    int nonDigit = input.find_first_not_of("0123456789");
+    size_t nonDigit = input.find_first_not_of("0123456789");
     multiplier = 1;
 
     if (nonDigit < input.size())

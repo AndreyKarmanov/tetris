@@ -3,7 +3,6 @@
 
 #include <vector>
 
-
 class Piece
 {
 private:
@@ -24,10 +23,11 @@ private:
 
     // Moves the piece to the bottom left corner of piece shape grid, used for rotation
     void forceBottomLeft();
-public:
 
+public:
     // Constructor & Destructor
     Piece(std::vector<std::vector<bool>> grid, int level, int colour, char type, bool heavy);
+    Piece(Piece &p, int level, bool heavy);
     ~Piece();
 
     // Accessors

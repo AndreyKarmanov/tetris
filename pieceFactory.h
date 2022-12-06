@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
 #include "piece.h"
 
 // PieceFactory is a factory class that creates pieces
@@ -12,7 +13,6 @@ private:
 
     // Stores the sequence of pieces to be created, if random is false
     std::vector<char> pieces;
-    
     // Stores whether the pieces should be created randomly
     bool random;
 
@@ -22,6 +22,7 @@ private:
     // Stores the seed for the random number generator
     int seed;
 
+    static std::vector<Piece*> customPieceList;
 public:
 
     // Constructor
@@ -30,7 +31,10 @@ public:
 
     // Updates the sequence of pieces to be created 
     void updatePieces(std::string sequence);
-    
+
+    // add a custom pieces to the list
+    static void addPieces(std::ifstream &filename);
+
     // Sets whether the pieces should be created randomly
     void setRandom(bool random);
 

@@ -1,13 +1,23 @@
 #include "pieceFactory.h"
 #include "piece.h"
 #include <cstdlib>
+#include <sstream>
+#include <iostream>
+
+std::vector<Piece *> PieceFactory::customPieceList = std::vector<Piece *>();
 
 PieceFactory::PieceFactory(std::string sequence, bool random, int seed) : random{random}, seed{seed}
 {
     updatePieces(sequence);
 }
 
-PieceFactory::~PieceFactory() {}
+PieceFactory::~PieceFactory()
+{
+    for (auto p : PieceFactory::customPieceList)
+    {
+        delete p;
+    }
+}
 
 Piece *PieceFactory::getPiece(char type, int level, bool heavy)
 {
@@ -52,6 +62,14 @@ Piece *PieceFactory::getPiece(char type, int level, bool heavy)
         return new Piece({{true}},
                          level, 8, '*', heavy);
     default:
+        // find the custom piece
+        for (auto p : PieceFactory::customPieceList)
+        {
+            if (p->getType() == type)
+            {
+                return new Piece(*p, level, heavy);
+            }
+        }
         return nullptr; // can add extra pieces here
     }
 }
@@ -68,6 +86,54 @@ void PieceFactory::updatePieces(std::string sequence)
     }
     // Reset the index of the next piece to be created
     currentPiece = 0;
+}
+
+void PieceFactory::addPieces(std::ifstream &in)
+{
+    using namespace std;
+    string line;
+    stringstream ss;
+    while (getline(in, line))
+    {
+        ss.str(line);
+        ss.clear();
+        char type;
+        int gridSize;
+
+        ss >> line >> type >> line >> gridSize;
+        if (ss.fail())
+        {
+            return;
+        }
+
+        vector<vector<bool>> grid(gridSize, vector<bool>(gridSize, false));
+        for (int i = 0; i < gridSize; i++)
+        {
+            getline(in, line);
+            ss.str(line);
+            ss.clear();
+            int c;
+            for (int j = 0; j < gridSize; j++)
+            {
+                ss >> c;
+                if (c == 1)
+                {
+                    grid[i][j] = true;
+                }
+            }
+        }
+        // print grid
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
+                cout << grid[i][j] << " ";
+            }
+            cout << endl;
+        }
+
+        PieceFactory::customPieceList.push_back(new Piece(grid, 0, 0, type, false));
+    }
 }
 
 // Sets whether the pieces should be created randomly

@@ -27,6 +27,24 @@ Piece::Piece(std::vector<std::vector<bool>> grid, int level, int colour, char ty
     }
 }
 
+// Copy Constructor
+Piece::Piece(Piece &p, int level, bool heavy) : grid{p.getGrid()}, colour{p.getColour()}, type{p.getType()}, level{level}, heavy{heavy}
+{
+    // Calculate the size of the piece
+    for (auto row : grid)
+    {
+        for (auto cell : row)
+        {
+            if (cell)
+            {
+                size++;
+            }
+        }
+    }
+    height = p.height;
+    width = p.width;
+}
+
 // Destructor
 Piece::~Piece() {}
 
