@@ -70,7 +70,7 @@ Piece *PieceFactory::getPiece(char type, int level, bool heavy)
                 return new Piece(*p, level, heavy);
             }
         }
-        return nullptr; // can add extra pieces here
+        return getPiece('*', level, heavy);
     }
 }
 
@@ -145,20 +145,15 @@ void PieceFactory::setRandom(bool random)
 // Returns the next piece to be created
 Piece *PieceFactory::getPiece(int level, bool heavy)
 {
-    Piece *p = nullptr;
     if (random)
     {
         // If random is true, create a random piece
-        p = getPiece(pieces[rand() % pieces.size()], level, heavy);
+        return getPiece(pieces[rand() % pieces.size()], level, heavy);
     }
     else
     {
         // Return next piece in sequence
         // If the sequence of pieces has been exhausted, start over
-        p = getPiece(pieces[currentPiece++ % pieces.size()], level, heavy);
-    }
-    if (p == nullptr)
-    {
-        return getPiece('*', level, heavy);
+        return getPiece(pieces[currentPiece++ % pieces.size()], level, heavy);
     }
 }
