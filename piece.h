@@ -20,7 +20,7 @@ private:
     const int level;
     int size;
     bool heavy;
-
+    void forceBottomLeft();
 public:
     Piece(std::vector<std::vector<bool>> grid, int level, int colour, char type, bool heavy);
     ~Piece();

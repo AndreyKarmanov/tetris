@@ -1,7 +1,8 @@
 #include "gameBoard.h"
 #include "piece.h"
 
-GameBoard::GameBoard(int rows, int cols) : rows{rows}, cols{cols}, board{std::vector<std::vector<Piece *>>(rows, std::vector<Piece *>(cols, nullptr))} {}
+GameBoard::GameBoard(int rows, int cols) 
+: rows{rows}, cols{cols}, board{std::vector<std::vector<Piece *>>(rows, std::vector<Piece *>(cols, nullptr))} {}
 
 GameBoard::~GameBoard() {}
 
