@@ -31,7 +31,7 @@ void TextWrapper::TextObserver::notify()
     ss << "+" << std::endl;
     ss << "| Level   : " << game->getLevel() << std::endl;
     ss << "| Score   : " << game->getScore() << std::endl;
-    ss << "| Hi Score: " << game->getHiScore() << std::endl;
+    ss << "| Hi Score: " << game->getHighScore() << std::endl;
 
     Piece *np = game->getNextPiece();
     auto grid = np->getGrid();

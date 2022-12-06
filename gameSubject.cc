@@ -48,7 +48,7 @@ int GameSubject::getScore() const { return score; }
 int GameSubject::getLevel() const { return level; }
 
 // Get the high score
-int GameSubject::getHiScore() const { return highScore; }
+int GameSubject::getHighScore() const { return highScore; }
 
 // Get the current piece
 Piece *GameSubject::getPiece() const { return currentPiece; }

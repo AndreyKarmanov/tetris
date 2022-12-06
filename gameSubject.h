@@ -39,7 +39,7 @@ public:
   // Getters
   int getScore() const;
   int getLevel() const;
-  int getHiScore() const;
+  int getHighScore() const;
   Piece *getPiece() const;
   Piece *getNextPiece() const;
   std::string getName() const;
