@@ -1,6 +1,6 @@
 #include "piece.h"
 #include "graphicsWrapper.h"
-#include "textObserver.h"
+#include "textWrapper.h"
 #include "game.h"
 
 #include <vector>
@@ -90,13 +90,18 @@ int main(int argc, char *argv[])
     // name, level, rows, cols, random, seed, player#
     vector<Game *>
         games{
-            new Game("Andrey", startLevel, rows, cols, true, seedNum, getSequence(file1))
-            // , new Game("John", startLevel, rows, cols, true, seedNum, getSequence(file2))
+            new Game("Andrey", startLevel, rows, cols, true, seedNum, getSequence(file1)),
+            new Game("John", startLevel, rows, cols, true, seedNum, getSequence(file2))
             // , new Game("Nolan", 0, 18, 11, true, 0, 3)
         };
     file1.close();
     file2.close();
     GraphicsWrapper *gw;
+    TextWrapper *tw;
+
+    tw = new TextWrapper(vector<GameSubject *>(games.begin(), games.end()));
+    tw->notifyAll();
+
     if (!textOnly)
     {
         gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
