@@ -32,6 +32,25 @@ void TextWrapper::TextObserver::notify()
     ss << "| Level   : " << game->getLevel() << std::endl;
     ss << "| Score   : " << game->getScore() << std::endl;
     ss << "| Hi Score: " << game->getHiScore() << std::endl;
+
+    Piece *np = game->getNextPiece();
+    auto grid = np->getGrid();
+    for (auto vec : grid)
+    {
+        for (auto cell : vec)
+        {
+            if (cell)
+            {
+                ss << np->getType();
+            }
+            else
+            {
+                ss << " ";
+            }
+        }
+        ss << std::endl;
+    }
+
     ss << "+";
     for (int cols = 0; cols < board->getCols(); ++cols)
     {
