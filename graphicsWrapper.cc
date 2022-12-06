@@ -105,5 +105,3 @@ void GraphicsWrapper::GraphicsObserver::notify()
         }
     }
 }
-
-}
