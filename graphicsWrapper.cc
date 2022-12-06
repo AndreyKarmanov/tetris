@@ -4,17 +4,41 @@
 #include "window.h"
 #include "piece.h"
 
+// Constructor
 GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwindow{500, 500}}
 {
+    // Create an observer for the game, with a relative position
     int player = 0;
     for (auto game : games)
     {
         observers.emplace_back(new GraphicsObserver{game, player++ * (game->getBoard()->getCols() * 10 + 20) + 20, 20, w});
         game->attach(observers.back());
     }
+
+    // Draw the background
     w->fillRectangle(0, 0, 500, 500, Xwindow::Black);
 }
 
+// Destructor
+GraphicsWrapper::~GraphicsWrapper()
+{
+    for (auto ob : observers)
+    {
+        delete ob;
+    }
+    delete w;
+}
+
+// Notify all observers of a change
+void GraphicsWrapper::notifyAll()
+{
+    for (auto ob : observers)
+    {
+        ob->notify();
+    }
+}
+
+// Constructor for GraphicsObserver
 GraphicsWrapper::GraphicsObserver::GraphicsObserver(GameSubject *game, int x, int y, Xwindow *w) : GameObserver{game}, x{x}, y{y}, w{w}
 {
     for (int rows = 0; rows < game->getBoard()->getRows(); ++rows)
@@ -24,6 +48,10 @@ GraphicsWrapper::GraphicsObserver::GraphicsObserver(GameSubject *game, int x, in
     }
 }
 
+// Destructor for GraphicsObserver
+GraphicsWrapper::GraphicsObserver::~GraphicsObserver() {}
+
+// Notify the observer of a change
 void GraphicsWrapper::GraphicsObserver::notify()
 {
     GameBoard *board = game->getBoard();
@@ -50,23 +78,31 @@ void GraphicsWrapper::GraphicsObserver::notify()
             }
         }
     }
-}
 
-GraphicsWrapper::GraphicsObserver::~GraphicsObserver() {}
+    // a white rectangle is drawn behind so that the black text is visible
+    w->fillRectangle(x, y + 20 + (board->getRows() * 10), board->getCols() * 10, 100, Xwindow::White);
+    // each stat is drawn
+    w->drawString(x + 10, y + 40 + (board->getRows() * 10), "Score: " + std::to_string(game->getScore()));
+    w->drawString(x + 10, y + 55 + (board->getRows() * 10), "HiScore: " + std::to_string(game->getScore()));
+    w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next:");
 
-GraphicsWrapper::~GraphicsWrapper()
-{
-    for (auto ob : observers)
+    std::vector<std::vector<bool>> grid = game->getNextPiece()->getGrid();
+    auto curColour = game->getNextPiece()->getColour();
+
+    // a white background is drawn each time behind the next piece
+    w->fillRectangle(x + 10, y + 80 + (board->getRows() * 10), 30, 30, Xwindow::White);
     {
-        delete ob;
-    }
-    delete w;
-}
-
-void GraphicsWrapper::notifyAll()
-{
-    for (auto ob : observers)
-    {
-        ob->notify();
+        // the next piece is drawn
+        // we must loop over each cell in the grid to draw it to the screen
+        for (int rows = 0; rows < grid.size(); ++rows)
+        {
+            for (int cols = 0; cols < grid[0].size(); ++cols)
+            {
+                if (grid[rows][cols])
+                {
+                    w->fillRectangle(x + 10 + rows * 10, y + cols * 10 + 80 + (board->getRows() * 10), 10, 10, curColour);
+                }
+            }
+        }
     }
 }

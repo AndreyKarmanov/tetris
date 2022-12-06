@@ -100,3 +100,11 @@ void TextWrapper::notifyAll()
         ob->notify();
     }
 }
+
+void TextWrapper::notifyAll()
+{
+    for (auto ob : observers)
+    {
+        ob->notify();
+    }
+}
