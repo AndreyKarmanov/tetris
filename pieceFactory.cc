@@ -21,13 +21,13 @@ Piece *PieceFactory::getPiece(char type, int level, bool heavy)
                          level, 1, 'I', heavy);
     case 'J':
         return new Piece({{false, false, false},
-                          {true, true, true},
-                          {false, false, true}},
+                          {true, false, false},
+                          {true, true, true}},
                          level, 2, 'J', heavy);
     case 'L':
         return new Piece({{false, false, false},
-                          {true, true, true},
-                          {true, false, false}},
+                          {false, false, true},
+                          {true, true, true}},
                          level, 3, 'L', heavy);
     case 'O':
         return new Piece({{true, true},
