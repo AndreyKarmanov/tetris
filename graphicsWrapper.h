@@ -40,7 +40,7 @@ private:
 
 public:
     // Constructor & Destructor/
-    GraphicsWrapper(std::vector<GameSubject *> games);
+    GraphicsWrapper(std::vector<GameSubject *> games, int rows, int cols);
     ~GraphicsWrapper();
 
     // Notify all observers of a change

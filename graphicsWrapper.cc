@@ -5,7 +5,7 @@
 #include "piece.h"
 
 // Constructor
-GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwindow{500, 500}}
+GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games, int rows, int cols) : w{new Xwindow{ games.size() * (cols * 10 + 20) + 20, 180 + rows * 10}}
 {
     // Create an observer for the game, with a relative position
     int player = 0;
@@ -16,7 +16,7 @@ GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwind
     }
 
     // Draw the background
-    w->fillRectangle(0, 0, 500, 500, Xwindow::Black);
+    w->fillRectangle(0, 0, games.size() * (cols * 10 + 20) + 20, 180 + rows * 10, Xwindow::Black);
 }
 
 // Destructor

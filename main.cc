@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     int startLevel = 0;
     int rows = 18;
     int cols = 11;
+    int players = 3;
 
     for (int i = 1; i < argc; ++i)
     {
@@ -92,6 +93,10 @@ int main(int argc, char *argv[])
         {
             customPieceFile = argv[++i];
         }
+        else if (arg == "-players")
+        {
+            players = stoi(argv[++i]);
+        }
         else if (arg == "-help")
         {
             cout << "Usage: ./quadris [-text] [-seed n] [-scriptfile1 f] [-scriptfile2 f] [-startlevel n] [-rows n] [-cols n] [-custom f]" << endl;
@@ -111,15 +116,18 @@ int main(int argc, char *argv[])
 
     ifstream file1(scriptfile1);
     ifstream file2(scriptfile2);
-    // name, level, rows, cols, random, seed, player#
-    vector<Game *>
-        games{
-            new Game("Andrey", startLevel, rows, cols, true, seedNum, getSequence(file1)),
-            new Game("John", startLevel, rows, cols, true, seedNum, getSequence(file2))
-            // , new Game("Nolan", 0, 18, 11, true, 0, 3)
-        };
+    std::string seq1 = getSequence(file1);
+    std::string seq2 = getSequence(file2);
     file1.close();
     file2.close();
+
+    vector<Game *> games;
+
+    for (int i = 1; i <= min(players, 4); ++i)
+    {
+        games.push_back(new Game(string("Player " + to_string(i + 1)), startLevel, rows, cols, true, seedNum, i % 2 == 1 ? seq1 : seq2));
+    }
+
     GraphicsWrapper *gw;
     TextWrapper *tw;
 
@@ -128,7 +136,7 @@ int main(int argc, char *argv[])
 
     if (!textOnly)
     {
-        gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()));
+        gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()), rows, cols);
         gw->notifyAll();
     }
 
@@ -278,6 +286,10 @@ int main(int argc, char *argv[])
 
             cout << "Invalid command" << endl;
             --i;
+        }
+        if (g->getGameOver())
+        {
+            g->restart();
         }
         g->notifyObservers();
     }
