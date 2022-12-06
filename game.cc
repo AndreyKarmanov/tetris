@@ -8,8 +8,8 @@
 
 Game::Game(std::string name, int level, int rows, int cols, bool random, int seed, std::string sequence)
     : GameSubject{level, rows, cols, name}, player{player}, factory{new PieceFactory{sequence, random, seed}},
-    blindBoard{new BlindBoard(board, 3, 3, 9, 6)}, gameOver{false}, heavyAttack{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0}, 
-    lastClearCount{0}, level0Seq{sequence}
+      blindBoard{new BlindBoard(board, 6, 2, 9, 6)}, gameOver{false}, heavyAttack{false}, splitting{false}, blind{false}, heavyPieces{false}, dropsSinceClear{0},
+      lastClearCount{0}, level0Seq{sequence}
 {
     setLevel(level);
     newPiece();
@@ -130,7 +130,7 @@ void Game::newPiece()
     currentPiece = nextPiece;
     nextPiece = factory->getPiece(level, heavyPieces);
     col = (board->getCols() - currentPiece->getWidth()) / 2;
-    row = 0;
+    row = std::min(0, 4 - currentPiece->getHeight());
     if (board->intersects(currentPiece, row, col))
     {
         gameOver = true;
@@ -179,7 +179,7 @@ void Game::setPiece(char type)
         delete currentPiece;
         currentPiece = temp;
         col = (board->getCols() - currentPiece->getWidth()) / 2;
-        row = 0;
+        row = std::min(0, 4 - currentPiece->getHeight());
         board->drawPiece(currentPiece, row, col);
     }
     else
