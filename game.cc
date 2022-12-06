@@ -256,7 +256,7 @@ void Game::setPiece(char type)
 {
     // Checks if the piece is valid, and if so, replaces the current piece
     Piece *temp = factory->getPiece(type, level, heavyPieces);
-    if (temp = nullptr)
+    if (temp == nullptr)
     {
         delete temp;
         return;
