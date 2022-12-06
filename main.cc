@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
         }
         else if (arg == "-help")
         {
-            cout << "Usage: ./quadris [-text] [-seed n] [-scriptfile1 f] [-scriptfile2 f] [-startlevel n] [-rows n] [-cols n] [-custom f]" << endl;
+            cout << "Usage: ./quadris [-text] [-seed n] [-scriptfile1 f] [-scriptfile2 f] [-startlevel n] [-rows n] [-cols n] [-custom f] [-players n]" << endl;
             return 0;
         }
     }
