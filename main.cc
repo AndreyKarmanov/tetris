@@ -47,7 +47,6 @@ std::map<std::string, std::string> commands{
 int main(int argc, char *argv[])
 {
     using namespace std;
-    // command line args
     string scriptfile1 = "sequence1.txt";
     string scriptfile2 = "sequence2.txt";
     string customPieceFile = "";
