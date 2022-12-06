@@ -55,7 +55,7 @@ GraphicsWrapper::GraphicsObserver::~GraphicsObserver() {}
 void GraphicsWrapper::GraphicsObserver::notify()
 {
     GameBoard *board = game->getBoard();
-    for (int rows = 0; rows < board->getRows(); ++rows)
+    for (int rows = 3; rows < board->getRows(); ++rows)
     {
         for (int cols = 0; cols < board->getCols(); ++cols)
         {

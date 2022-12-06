@@ -200,7 +200,7 @@ void Game::newPiece()
 
     // Places the piece in the middle of the board, right below reserved rows
     col = (board->getCols() - currentPiece->getWidth()) / 2;
-    row = std::min(0, 4 - currentPiece->getHeight());
+    row = std::max(0, 4 - currentPiece->getHeight());
 
     // Checks for a game over
     if (board->intersects(currentPiece, row, col))
@@ -270,7 +270,7 @@ void Game::setPiece(char type)
 
     // Places the piece in the middle of the board, right below reserved rows
     col = (board->getCols() - currentPiece->getWidth()) / 2;
-    row = std::min(0, 4 - currentPiece->getHeight());
+    row = std::max(0, 4 - currentPiece->getHeight());
 
     // Checks for a game over
     if (board->intersects(currentPiece, row, col))
