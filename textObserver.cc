@@ -7,8 +7,10 @@
 #include <iostream>
 #include <sstream>
 
+// Constructor
 TextObserver::TextObserver(GameSubject *game) : GameObserver{game} {}
 
+// Prints the game board to the console
 void TextObserver::notify() {
     GameBoard *board = game->getBoard();
     std::stringstream ss;
@@ -53,4 +55,5 @@ void TextObserver::notify() {
     std::cout << ss.str();
 }
 
+// Destructor
 TextObserver::~TextObserver() {}

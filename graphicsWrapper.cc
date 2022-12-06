@@ -4,17 +4,41 @@
 #include "window.h"
 #include "piece.h"
 
+// Constructor
 GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games) : w{new Xwindow{500, 500}}
 {
+    // Create an observer for the game, with a relative position
     int player = 0;
     for (auto game : games)
     {
         observers.emplace_back(new GraphicsObserver{game, player++ * (game->getBoard()->getCols() * 10 + 20) + 20, 20, w});
         game->attach(observers.back());
     }
+
+    // Draw the background
     w->fillRectangle(0, 0, 500, 500, Xwindow::Black);
 }
 
+// Destructor
+GraphicsWrapper::~GraphicsWrapper()
+{
+    for (auto ob : observers)
+    {
+        delete ob;
+    }
+    delete w;
+}
+
+// Notify all observers of a change
+void GraphicsWrapper::notifyAll()
+{
+    for (auto ob : observers)
+    {
+        ob->notify();
+    }
+}
+
+// Constructor for GraphicsObserver
 GraphicsWrapper::GraphicsObserver::GraphicsObserver(GameSubject *game, int x, int y, Xwindow *w) : GameObserver{game}, x{x}, y{y}, w{w}
 {
     for (int rows = 0; rows < game->getBoard()->getRows(); ++rows)
@@ -24,6 +48,10 @@ GraphicsWrapper::GraphicsObserver::GraphicsObserver(GameSubject *game, int x, in
     }
 }
 
+// Destructor for GraphicsObserver
+GraphicsWrapper::GraphicsObserver::~GraphicsObserver() {}
+
+// Notify the observer of a change
 void GraphicsWrapper::GraphicsObserver::notify()
 {
     GameBoard *board = game->getBoard();
@@ -49,24 +77,5 @@ void GraphicsWrapper::GraphicsObserver::notify()
                 }
             }
         }
-    }
-}
-
-GraphicsWrapper::GraphicsObserver::~GraphicsObserver() {}
-
-GraphicsWrapper::~GraphicsWrapper()
-{
-    for (auto ob : observers)
-    {
-        delete ob;
-    }
-    delete w;
-}
-
-void GraphicsWrapper::notifyAll()
-{
-    for (auto ob : observers)
-    {
-        ob->notify();
     }
 }

@@ -56,29 +56,38 @@ Piece *PieceFactory::getPiece(char type, int level, bool heavy)
     }
 }
 
+// Updates the sequence of pieces to be created
 void PieceFactory::updatePieces(std::string sequence)
 {
+    // Clear the sequence of pieces
     pieces.clear();
+    // Add the new sequence of pieces
     for (auto c : sequence)
     {
         pieces.push_back(c);
     }
+    // Reset the index of the next piece to be created
     currentPiece = 0;
 }
 
+// Sets whether the pieces should be created randomly
 void PieceFactory::setRandom(bool random)
 {
     this->random = random;
 }
 
+// Returns the next piece to be created
 Piece *PieceFactory::getPiece(int level, bool heavy)
 {
     if (random)
     {
+        // If random is true, create a random piece
         return getPiece(pieces[rand() % pieces.size()], level, heavy);
     }
     else
     {
+        // Return next piece in sequence
+        // If the sequence of pieces has been exhausted, start over
         return getPiece(pieces[currentPiece++ % pieces.size()], level, heavy);
     }
 }

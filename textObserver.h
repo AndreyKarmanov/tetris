@@ -5,6 +5,7 @@
 
 class GameSubject;
 
+// TextObserver is a concrete observer that prints the game state to the terminal
 class TextObserver : public GameObserver
 {
 public:
