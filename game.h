@@ -56,7 +56,7 @@ public:
     bool getGameOver();
 
     // Moves the current piece
-    void move(int right, int down, int count = 1, bool autoMove = false);
+    void move(int right, int down, int count = 1, bool stopAutoMove = false);
     
     // Drops the current piece
     void drop();
@@ -67,10 +67,10 @@ public:
 
     // Creates a new piece
     void newPiece();
+    void setPiece(char type);
 
     // Sets the special effects and state
     void setLevel(int level);
-    void setPiece(char type);
     void setHeavy(bool heavy);
     void setBlind(bool blind);
     void setRandom();
@@ -81,7 +81,6 @@ public:
 
     // Restarts the game
     void restart();
-
 };
 
 #endif

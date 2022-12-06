@@ -281,9 +281,7 @@ std::string findSimilarCommand(std::string command)
             if (foundCommand)
             {
                 return command;
-            }
-            else
-            {
+            } else {
                 foundCommand = true;
                 similarCommand = pair.second;
             }

@@ -82,7 +82,7 @@ void GraphicsWrapper::GraphicsObserver::notify()
     w->fillRectangle(x, y + 20 + (board->getRows() * 10), board->getCols() * 10, 100, Xwindow::White);
     // each stat is drawn
     w->drawString(x + 10, y + 40 + (board->getRows() * 10), "Score: " + std::to_string(game->getScore()));
-    w->drawString(x + 10, y + 55 + (board->getRows() * 10), "HiScore: " + std::to_string(game->getScore()));
+    w->drawString(x + 10, y + 55 + (board->getRows() * 10), "HiScore: " + std::to_string(game->getHighScore()));
     w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next:");
 
     std::vector<std::vector<bool>> grid = game->getNextPiece()->getGrid();
@@ -93,9 +93,9 @@ void GraphicsWrapper::GraphicsObserver::notify()
     {
         // the next piece is drawn
         // we must loop over each cell in the grid to draw it to the screen
-        for (int rows = 0; rows < grid.size(); ++rows)
+        for (int rows = 0; rows < game->getNextPiece()->getHeight(); ++rows)
         {
-            for (int cols = 0; cols < grid[0].size(); ++cols)
+            for (int cols = 0; cols < game->getNextPiece()->getWidth(); ++cols)
             {
                 if (grid[rows][cols])
                 {

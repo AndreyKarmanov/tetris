@@ -49,7 +49,7 @@ bool Game::getGameOver()
 
 // Moves the current piece right or left by the given amount
 // Recursively calls itself if the piece is heavy
-void Game::move(int right, int down, int count, bool autoMove)
+void Game::move(int right, int down, int count, bool stopAutoMove)
 {
     while (count > 0 && !board->intersects(currentPiece, row + down, col + right))
     {
@@ -67,7 +67,7 @@ void Game::move(int right, int down, int count, bool autoMove)
         --count;
     }
 
-    if (heavyAttack && !autoMove)
+    if (heavyAttack && !stopAutoMove)
     {
         // Moves the piece down if it is heavy
         int temp = row;
@@ -78,7 +78,7 @@ void Game::move(int right, int down, int count, bool autoMove)
         }
     }
     
-    if (currentPiece->isHeavy() && !autoMove)
+    if (currentPiece->isHeavy() && !stopAutoMove)
     {
         // Moves the piece down if it is heavy
         move(0, 1, 1, true);
@@ -211,6 +211,35 @@ void Game::newPiece()
     // draws the piece on the board
     board->drawPiece(currentPiece, row, col);
 }
+// Replaces current piece with piece of given type
+void Game::setPiece(char type)
+{
+    // Checks if the piece is valid, and if so, replaces the current piece
+    Piece *temp = factory->getPiece(type, level, heavyPieces);
+    if (temp == nullptr)
+    {
+        delete temp;
+        return;
+    }
+
+    // Removes the current piece from the board
+    board->erasePiece(currentPiece, row, col);
+    delete currentPiece;
+
+    // Sets the current piece to the new piece
+    currentPiece = temp;
+
+    // Places the piece in the middle of the board, right below reserved rows
+    col = (board->getCols() - currentPiece->getWidth()) / 2;
+    row = std::max(0, 4 - currentPiece->getHeight());
+
+    // Checks for a game over
+    if (board->intersects(currentPiece, row, col))
+    {
+        gameOver = true;
+    }
+    board->drawPiece(currentPiece, row, col);
+}
 
 // Sets the level of the game
 void Game::setLevel(int level)
@@ -248,36 +277,6 @@ void Game::setLevel(int level)
     {
         splitting = true;
     }
-}
-
-// Replaces current piece with piece of given type
-void Game::setPiece(char type)
-{
-    // Checks if the piece is valid, and if so, replaces the current piece
-    Piece *temp = factory->getPiece(type, level, heavyPieces);
-    if (temp == nullptr)
-    {
-        delete temp;
-        return;
-    }
-
-    // Removes the current piece from the board
-    board->erasePiece(currentPiece, row, col);
-    delete currentPiece;
-
-    // Sets the current piece to the new piece
-    currentPiece = temp;
-
-    // Places the piece in the middle of the board, right below reserved rows
-    col = (board->getCols() - currentPiece->getWidth()) / 2;
-    row = std::max(0, 4 - currentPiece->getHeight());
-
-    // Checks for a game over
-    if (board->intersects(currentPiece, row, col))
-    {
-        gameOver = true;
-    }
-    board->drawPiece(currentPiece, row, col);
 }
 
 // Sets the heavy attack flag
