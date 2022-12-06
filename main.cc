@@ -333,10 +333,14 @@ std::string getSequence(std::ifstream &file)
 void loadCommandSequence(std::stringstream &ss, std::ifstream &file)
 {
     std::string line;
-    ss.str("");
-    ss.clear();
+    if (ss.eof() || ss.str().empty())
+    {
+        getline(file, line);
+        ss.str(line);
+        ss.clear();
+    }
     while (getline(file, line))
     {
-        ss.str(ss.str() + line);
+        ss << " " << line;
     }
 }
