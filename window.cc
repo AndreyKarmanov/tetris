@@ -8,10 +8,12 @@
 
 using namespace std;
 
-Xwindow::Xwindow(int width, int height) {
+Xwindow::Xwindow(int width, int height)
+{
 
   d = XOpenDisplay(NULL);
-  if (d == NULL) {
+  if (d == NULL)
+  {
     cerr << "Cannot open display" << endl;
     exit(1);
   }
@@ -21,9 +23,9 @@ Xwindow::Xwindow(int width, int height) {
   XSelectInput(d, w, ExposureMask | KeyPressMask);
   XMapRaised(d, w);
 
-  Pixmap pix = XCreatePixmap(d,w,width,
-        height,DefaultDepth(d,DefaultScreen(d)));
-  gc = XCreateGC(d, pix, 0,(XGCValues *)0);
+  Pixmap pix = XCreatePixmap(d, w, width,
+                             height, DefaultDepth(d, DefaultScreen(d)));
+  gc = XCreateGC(d, pix, 0, (XGCValues *)0);
 
   XFlush(d);
   XFlush(d);
@@ -31,48 +33,55 @@ Xwindow::Xwindow(int width, int height) {
   // Set up colours.
   XColor xcolour;
   Colormap cmap;
-  char color_vals[10][10]={"white", "black", "red", "green", "blue", "cyan", "yellow", "magenta", "orange", "brown"};
+  char color_vals[10][10] = {"white", "black", "red", "green", "blue", "cyan", "yellow", "magenta", "orange", "brown"};
 
-  cmap=DefaultColormap(d,DefaultScreen(d));
-  for(int i=0; i < 10; ++i) {
-      XParseColor(d,cmap,color_vals[i],&xcolour);
-      XAllocColor(d,cmap,&xcolour);
-      colours[i]=xcolour.pixel;
+  cmap = DefaultColormap(d, DefaultScreen(d));
+  for (int i = 0; i < 10; ++i)
+  {
+    XParseColor(d, cmap, color_vals[i], &xcolour);
+    XAllocColor(d, cmap, &xcolour);
+    colours[i] = xcolour.pixel;
   }
 
-  XSetForeground(d,gc,colours[Black]);
+  XSetForeground(d, gc, colours[Black]);
 
   // Make window non-resizeable.
   XSizeHints hints;
-  hints.flags = (USPosition | PSize | PMinSize | PMaxSize );
-  hints.height = hints.base_height = hints.min_height = hints.max_height = height;
-  hints.width = hints.base_width = hints.min_width = hints.max_width = width;
+  hints.flags = (USPosition | PSize | PMinSize | PMaxSize);
+  hints.height = hints.base_height = hints.min_height = height;
+  hints.max_height = height + 200;
+  hints.width = hints.base_width = hints.min_width = width;
+  hints.max_width = width + 200;
   XSetNormalHints(d, w, &hints);
 
-  XSynchronize(d,True);
+  XSynchronize(d, True);
 
   usleep(1000);
 
   // Make sure we don't race against the Window being shown
   XEvent ev;
-  while(1) {
+  while (1)
+  {
     XNextEvent(d, &ev);
-    if(ev.type == Expose) break;
+    if (ev.type == Expose)
+      break;
   }
 }
 
-Xwindow::~Xwindow() {
+Xwindow::~Xwindow()
+{
   XFreeGC(d, gc);
   XCloseDisplay(d);
 }
 
-void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
+void Xwindow::fillRectangle(int x, int y, int width, int height, int colour)
+{
   XSetForeground(d, gc, colours[colour % 10]);
   XFillRectangle(d, w, gc, x, y, width, height);
   XSetForeground(d, gc, colours[Black]);
 }
 
-void Xwindow::drawString(int x, int y, string msg) {
+void Xwindow::drawString(int x, int y, string msg)
+{
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 }
-
