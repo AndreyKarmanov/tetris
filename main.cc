@@ -141,14 +141,15 @@ int main(int argc, char *argv[])
     string input;
     int multiplier;
     bool dropped = false; // sets true when a player has dropped a piece to break the turn loop
+    bool playing = true;
     stringstream ss;
 
-    for (int i = 0;; i = (i + 1) % games.size())
+    for (int i = 0; playing; i = (i + 1) % games.size())
     {
         Game *g = games[i];
         cout << g->getName() << "'s turn" << endl;
         tw->notifyAll();
-        while (true) // turn loop
+        while (true && playing) // turn loop
             {
             getCommand(ss, input, multiplier);
             if (input == "left")
@@ -261,6 +262,7 @@ int main(int argc, char *argv[])
             }
             else if (input == "quit")
             {
+                playing = false;
                 break;
             }
             else if (input == "rename")
@@ -344,6 +346,12 @@ void getCommand(std::stringstream &ss, std::string &command, int &multiplier)
     if (ss.eof() || ss.str().empty())
     {
         getline(cin, input);
+        if (cin.eof())
+        {
+            command = "quit";
+            multiplier = 1;
+            return;
+        }
         ss.str(input);
         ss.clear();
     }
