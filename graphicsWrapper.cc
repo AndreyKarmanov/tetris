@@ -5,7 +5,7 @@
 #include "piece.h"
 
 // Constructor
-GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games, int rows, int cols) : w{new Xwindow{ games.size() * (cols * 10 + 20) + 20, 180 + rows * 10}}
+GraphicsWrapper::GraphicsWrapper(std::vector<GameSubject *> games, int rows, int cols) : w{new Xwindow{games.size() * (cols * 10 + 20) + 20, 180 + rows * 10}}
 {
     // Create an observer for the game, with a relative position
     int player = 0;
@@ -79,11 +79,11 @@ void GraphicsWrapper::GraphicsObserver::notify()
         }
     }
     // a white rectangle is drawn behind so that the black text is visible
-    w->fillRectangle(x, y + 20 + (board->getRows() * 10), board->getCols() * 10, 100, Xwindow::White);
+    w->fillRectangle(x, y + 20 + (board->getRows() * 10), board->getCols() * 10, 110, Xwindow::White);
     // each stat is drawn
     w->drawString(x + 10, y + 40 + (board->getRows() * 10), "Score: " + std::to_string(game->getScore()));
     w->drawString(x + 10, y + 55 + (board->getRows() * 10), "HiScore: " + std::to_string(game->getHighScore()));
-    w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next: Held:");
+    w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next:");
 
     std::vector<std::vector<bool>> grid = game->getNextPiece()->getGrid();
     auto curColour = game->getNextPiece()->getColour();
@@ -104,16 +104,17 @@ void GraphicsWrapper::GraphicsObserver::notify()
             }
         }
     }
-    
+
     // draw the held piece
 
     if (game->getHeldPiece())
     {
         std::vector<std::vector<bool>> grid = game->getHeldPiece()->getGrid();
         auto curColour = game->getHeldPiece()->getColour();
+        w->drawString(x + 10, y + 70 + (board->getRows() * 10), "       Held:");
 
         // a white background is drawn each time behind the next piece
-        w->fillRectangle(x + 60, y + 80 + (board->getRows() * 10), 30, 30, Xwindow::White);
+        w->fillRectangle(x + 60, y + 80 + (board->getRows() * 10), 30, 40, Xwindow::White);
         {
             // the next piece is drawn
             // we must loop over each cell in the grid to draw it to the screen
@@ -130,4 +131,3 @@ void GraphicsWrapper::GraphicsObserver::notify()
         }
     }
 }
-
