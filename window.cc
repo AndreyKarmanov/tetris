@@ -85,3 +85,4 @@ void Xwindow::drawString(int x, int y, string msg)
 {
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 }
+
