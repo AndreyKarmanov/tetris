@@ -32,6 +32,7 @@ std::map<std::string, std::string> commands{
     {"random", "random"},
     {"sequence", "sequence"},
     {"restart", "restart"},
+    {"hold", "hold"},
     {"I", "I"},
     {"J", "J"},
     {"L", "L"},
@@ -262,6 +263,14 @@ int main(int argc, char *argv[])
                         f.close();
                     }
                 }
+            }
+            else if (input == "hold")
+            {
+                g->switchPiece();
+            }
+            else if (input == "I" || input == "J" || input == "L" || input == "O" || input == "S" || input == "Z" || input == "T")
+            {
+                g->setPiece(input[0]);
             }
             else if (input == "quit")
             {

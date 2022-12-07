@@ -241,6 +241,40 @@ void Game::setPiece(char type)
     board->drawPiece(currentPiece, row, col);
 }
 
+// Switches the current piece with the held piece
+void Game::switchPiece()
+{
+    
+    // Removes the current piece from the board
+    board->erasePiece(currentPiece, row, col);
+
+    // Checks if the held piece is null, and if so, sets it to the current piece
+    if (heldPiece == nullptr)
+    {
+        heldPiece = currentPiece;
+        newPiece();
+        return;
+    }
+
+    // Swaps the current piece with the held piece
+    Piece *temp = currentPiece;
+    currentPiece = heldPiece;
+    heldPiece = temp;
+
+    // Places the piece in the middle of the board, right below reserved rows
+    col = (board->getCols() - currentPiece->getWidth()) / 2;
+    row = std::max(0, 4 - currentPiece->getHeight());
+
+    // Checks for a game over
+    if (board->intersects(currentPiece, row, col))
+    {
+        gameOver = true;
+    }
+
+    // Draws the piece on the board
+    board->drawPiece(currentPiece, row, col);
+}
+
 // Sets the level of the game
 void Game::setLevel(int level)
 {

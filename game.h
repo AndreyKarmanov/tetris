@@ -68,6 +68,7 @@ public:
     // Creates a new piece
     void newPiece();
     void setPiece(char type);
+    void switchPiece();
 
     // Sets the special effects and state
     void setLevel(int level);

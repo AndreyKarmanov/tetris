@@ -56,6 +56,9 @@ Piece *GameSubject::getPiece() const { return currentPiece; }
 // Get the next piece
 Piece *GameSubject::getNextPiece() const { return nextPiece; }
 
+// Get the held piece
+Piece *GameSubject::getHeldPiece() const { return heldPiece; }
+
 // Get the name of the player
 std::string GameSubject::getName() const { return name; }
 
