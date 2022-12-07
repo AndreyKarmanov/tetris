@@ -18,6 +18,14 @@ TextWrapper::TextWrapper(std::vector<GameSubject *> games)
     }
 }
 
+void TextWrapper::printLine(std::string curline, int padding)
+{
+    std::cout << curline;
+    for (int i = curline.size(); i < padding; ++i) {
+        std::cout << " ";
+    }
+}
+
 TextWrapper::TextObserver::TextObserver(GameSubject *game) : GameObserver{game} {}
 
 std::stringstream TextWrapper::TextObserver::generateBoard()
@@ -64,7 +72,8 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
     }
     ss << "+" << std::endl;
 
-    ss << "Next:" << std::endl;
+    std::stringstream nexts;
+    nexts << "Next:" << std::endl;
     Piece *np = game->getNextPiece();
     auto grid = np->getGrid();
     for (auto vec : grid)
@@ -73,22 +82,61 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
         {
             if (cell)
             {
-                ss << np->getType();
+                nexts << np->getType();
             }
             else
             {
-                ss << " ";
+                nexts << " ";
             }
         }
-        ss << std::endl;
+        nexts << std::endl;
     }
     if (np->getType() == 'O')
     {
-        ss << std::endl;
+        nexts << std::endl;
     }
     if (np->getType() != 'I')
     {
-        ss << std::endl;
+        nexts << std::endl;
+    }
+
+    if (game->getHeldPiece()) {
+        std::stringstream helds;
+        helds << "Held:" << std::endl;
+        Piece *hp = game->getHeldPiece();
+        auto grid = hp->getGrid();
+        for (auto vec : grid)
+        {
+            for (auto cell : vec)
+            {
+                if (cell)
+                {
+                    helds << hp->getType();
+                }
+                else
+                {
+                    helds << " ";
+                }
+            }
+            helds << std::endl;
+        }
+
+        std::string curline;
+        while (getline(nexts, curline))
+        {
+            ss << curline;
+            for (int i = curline.size(); i < 8; ++i)
+            {
+                ss << " ";
+            }
+            if (getline(helds, curline)) {
+                ss << curline;
+            }
+            ss << std::endl;
+        }
+    }
+    else {
+        ss << nexts.str();
     }
 
     return ss;
@@ -109,14 +157,6 @@ TextWrapper::~TextWrapper()
     }
 }
 
-void TextWrapper::printLine(std::string curline)
-{
-    std::cout << curline;
-    for (int i = curline.size(); i < 20; ++i) {
-        std::cout << " ";
-    }
-}
-
 void TextWrapper::notifyAll()
 {
     std::vector<std::stringstream> boards;
@@ -129,10 +169,10 @@ void TextWrapper::notifyAll()
     std::string curline;
     while (getline(boards[0], curline))
     {
-        printLine(curline);
+        printLine(curline, 20);
         for (int i = 1; i < boardNum; ++i) {
             getline(boards[i], curline);
-            printLine(curline);
+            printLine(curline, 20);
         }
         std::cout << std::endl;
     }
