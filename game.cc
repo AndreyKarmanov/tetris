@@ -369,8 +369,20 @@ void Game::restart()
         delete currentPiece;
     }
 
+    if (heldPiece)
+    {
+        delete heldPiece;
+    }
+
+    if (nextPiece)
+    {
+        delete nextPiece;
+    }
+
     // Resets all values
     currentPiece = nullptr;
+    heldPiece = nullptr;
+    nextPiece = nullptr;
     gameOver = false;
     dropsSinceClear = 0;
     lastClearCount = 0;
