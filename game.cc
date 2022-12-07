@@ -30,7 +30,7 @@ Game::~Game()
     {
         delete currentPiece;
     }
-
+    delete blindBoard;
     // Deletes the factory
     delete factory;
 }

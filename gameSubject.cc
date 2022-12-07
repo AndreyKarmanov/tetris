@@ -9,7 +9,13 @@
 GameSubject::GameSubject(int level, int rows, int cols, std::string name) : board{new GameBoard(rows, cols)}, score{0}, level{level}, highScore{0}, name{name} {}
 
 // Destructor
-GameSubject::~GameSubject() { delete board; }
+GameSubject::~GameSubject()
+{
+  delete board;
+  delete currentPiece;
+  delete nextPiece;
+  delete heldPiece;
+}
 
 // Attach an observer to the subject
 void GameSubject::attach(GameObserver *o)
