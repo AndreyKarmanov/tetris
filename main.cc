@@ -11,14 +11,23 @@
 #include <fstream>
 #include <map>
 
+// Loads custom pieces from a file, passing the file into the PieceFactory
 void loadCustomPieces(std::ifstream &file);
 
+// Loads a sequence of commands from a file, returning a string of the commands
 std::string getSequence(std::ifstream &file);
+
+// Loads a sequence of commands from a file, passing the file into the stringstream
 void loadCommandSequence(std::stringstream &ss, std::ifstream &file);
 
+// Gets a command from the stringstream, returning the command and the multiplier
 void getCommand(std::stringstream &ss, std::string &command, int &multiplier);
+
+// Loads a sequence of commands from a file, passing the file into the stringstream
 void loadCommands(std::stringstream &ss, std::ifstream &file);
 
+// Map of commands to their string representations
+// Used to check for command autocomplete and adding renamed commands
 std::map<std::string, std::string> commands{
     {"left", "left"},
     {"right", "right"},
@@ -48,6 +57,8 @@ std::map<std::string, std::string> commands{
 int main(int argc, char *argv[])
 {
     using namespace std;
+
+    // Default values for command line arguments
     string scriptfile1 = "sequence1.txt";
     string scriptfile2 = "sequence2.txt";
     string customPieceFile = "";
@@ -58,6 +69,7 @@ int main(int argc, char *argv[])
     int cols = 11;
     int players = 3;
 
+    // Parse command line arguments
     for (int i = 1; i < argc; ++i)
     {
         string arg = argv[i];
@@ -104,6 +116,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Load custom pieces, if any file provided
     if (customPieceFile != "")
     {
         ifstream f(customPieceFile);
@@ -114,6 +127,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Load command sequences
     ifstream file1(scriptfile1);
     ifstream file2(scriptfile2);
     std::string seq1 = getSequence(file1);
@@ -121,41 +135,49 @@ int main(int argc, char *argv[])
     file1.close();
     file2.close();
 
+    // Create games
     vector<Game *> games;
-
     for (int i = 1; i <= min(players, 4); ++i)
     {
         games.push_back(new Game(string("Player " + to_string(i)), startLevel, rows, cols, true, seedNum, i % 2 == 1 ? seq1 : seq2));
     }
 
+    // Create wrappers for graphics and text
     GraphicsWrapper *gw;
     TextWrapper *tw;
 
     tw = new TextWrapper(vector<GameSubject *>(games.begin(), games.end()));
 
+    // Create graphics window if not text only
     if (!textOnly)
     {
         gw = new GraphicsWrapper(vector<GameSubject *>(games.begin(), games.end()), rows, cols);
         gw->notifyAll();
     }
 
+    // Main game loop variables
     string input;
     int multiplier;
     bool dropped = false; // sets true when a player has dropped a piece to break the turn loop
-    bool playing = true;
+    bool playing = true;  // sets false when a player has quit to break the game loop
+
+    // String stream that buffers commands from files or user input
     stringstream ss;
 
     for (int i = 0; playing; i = (i + 1) % games.size())
     {
+        // Update to next player
         Game *g = games[i];
         cout << g->getName() << "'s turn" << endl;
         tw->notifyAll();
-        while (true && playing) // turn loop
-            {
+
+        // Keep looping until a player drops a piece, or quits
+        while (true && playing && !dropped)
+        {
+            // Get command using helper function
             getCommand(ss, input, multiplier);
             if (input == "left")
             {
-
                 g->move(-1, 0, multiplier);
             }
             else if (input == "right")
@@ -169,6 +191,7 @@ int main(int argc, char *argv[])
             }
             else if (input == "clockwise")
             {
+                // Repeat command multiple time if multiplier is provided
                 for (int j = multiplier; j > 0; --j)
                 {
                     g->rotateCW();
@@ -186,11 +209,15 @@ int main(int argc, char *argv[])
                 dropped = true;
                 for (int j = multiplier; j > 0; --j)
                 {
+                    // Drop piece
                     g->drop();
+
+                    // Check if user gets a bonus
                     if (g->getLastClearCount() >= 2)
                     {
                         cout << "Player " << g->getName() << " has cleared " << g->getLastClearCount() << " lines!" << endl;
                         cout << "Choose a bonus: heavy, blind, or force [IJLOTSZ]" << endl;
+                        // Loop until user enters a valid bonus
                         while (true)
                         {
                             getCommand(ss, input, multiplier);
@@ -214,7 +241,9 @@ int main(int argc, char *argv[])
                                 }
                                 games[(i + 1) % games.size()]->setPiece(input[0]);
                                 break;
-                            } else if (input == "quit") {
+                            }
+                            else if (input == "quit")
+                            {
                                 playing = false;
                                 break;
                             }
@@ -242,6 +271,7 @@ int main(int argc, char *argv[])
             }
             else if (input == "sequence")
             {
+                // Load command sequence from file
                 string file;
                 getCommand(ss, file, multiplier);
                 ifstream f(file);
@@ -270,6 +300,7 @@ int main(int argc, char *argv[])
             }
             else if (input == "I" || input == "J" || input == "L" || input == "O" || input == "S" || input == "Z" || input == "T")
             {
+                // Set piece to input for default piecees. 
                 g->setPiece(input[0]);
             }
             else if (input == "quit")
@@ -284,6 +315,7 @@ int main(int argc, char *argv[])
                 string command;
                 getCommand(ss, command, multiplier);
 
+                // Check if command exists, to prevent overwriting
                 if (commands.count(command) == 0)
                 {
                     commands[command] = name;
@@ -296,6 +328,7 @@ int main(int argc, char *argv[])
             }
             else
             {
+                // if command is not a valid command, check if it is a valid piece
                 if (input.length() == 1)
                 {
                     g->setPiece(input[0]);
@@ -309,14 +342,10 @@ int main(int argc, char *argv[])
                 g->restart();
             }
             g->notifyObservers();
-            if (dropped)
-            {
-                dropped = false;
-                break;
-            }
         }
     }
 
+    // Clean up
     delete tw;
     if (!textOnly)
     {
@@ -329,6 +358,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+// Returns a similar command if one exists, otherwise returns the original command
 std::string findSimilarCommand(std::string command)
 {
     bool foundCommand = false;
@@ -351,13 +381,19 @@ std::string findSimilarCommand(std::string command)
     return similarCommand;
 }
 
+// Loads a command from string stream or cin if string stream is empty
 void getCommand(std::stringstream &ss, std::string &command, int &multiplier)
 {
     using namespace std;
     string input;
+
+    // Check if string stream is empty
     if (ss.eof() || ss.str().empty())
     {
+        // Get input from cin
         getline(cin, input);
+
+        // Check if cin is empty, if so, set command to quit
         if (cin.eof())
         {
             command = "quit";
@@ -367,10 +403,14 @@ void getCommand(std::stringstream &ss, std::string &command, int &multiplier)
         ss.str(input);
         ss.clear();
     }
+
+    // take in command
     ss >> input;
+
     size_t nonDigit = input.find_first_not_of("0123456789");
     multiplier = 1;
 
+    // Check if there was a multiplier
     if (nonDigit < input.size())
     {
         command = findSimilarCommand(input.substr(nonDigit, input.length()));
@@ -379,13 +419,18 @@ void getCommand(std::stringstream &ss, std::string &command, int &multiplier)
     {
         command = findSimilarCommand(input);
     }
+
+    // Check if there was a multiplier, if so, set multiplier
     if (isdigit(input[0]))
     {
         multiplier = stoi(input.substr(0, nonDigit));
     }
+
+    // Print command and multiplier
     cout << "Command: " << command << " Multiplier: " << multiplier << endl;
 }
 
+// Loads a sequence of pieces from a file
 std::string getSequence(std::ifstream &file)
 {
     std::ostringstream iss;
@@ -397,6 +442,7 @@ std::string getSequence(std::ifstream &file)
     return iss.str();
 }
 
+// Loads a command sequence from a file
 void loadCommandSequence(std::stringstream &ss, std::ifstream &file)
 {
     std::string line;
