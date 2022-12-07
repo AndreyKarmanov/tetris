@@ -343,6 +343,7 @@ int main(int argc, char *argv[])
             }
             g->notifyObservers();
         }
+        dropped = false;
     }
 
     // Clean up
