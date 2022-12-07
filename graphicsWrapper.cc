@@ -83,7 +83,7 @@ void GraphicsWrapper::GraphicsObserver::notify()
     // each stat is drawn
     w->drawString(x + 10, y + 40 + (board->getRows() * 10), "Score: " + std::to_string(game->getScore()));
     w->drawString(x + 10, y + 55 + (board->getRows() * 10), "HiScore: " + std::to_string(game->getHighScore()));
-    w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next:");
+    w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next: Held:");
 
     std::vector<std::vector<bool>> grid = game->getNextPiece()->getGrid();
     auto curColour = game->getNextPiece()->getColour();
@@ -100,6 +100,31 @@ void GraphicsWrapper::GraphicsObserver::notify()
                 if (grid[rows][cols])
                 {
                     w->fillRectangle(x + 10 + rows * 10, y + cols * 10 + 80 + (board->getRows() * 10), 10, 10, curColour);
+                }
+            }
+        }
+    }
+    
+    // draw the held piece
+
+    if (game->getHeldPiece())
+    {
+        std::vector<std::vector<bool>> grid = game->getHeldPiece()->getGrid();
+        auto curColour = game->getHeldPiece()->getColour();
+
+        // a white background is drawn each time behind the next piece
+        w->fillRectangle(x + 60, y + 80 + (board->getRows() * 10), 30, 30, Xwindow::White);
+        {
+            // the next piece is drawn
+            // we must loop over each cell in the grid to draw it to the screen
+            for (int rows = 0; rows < game->getHeldPiece()->getHeight(); ++rows)
+            {
+                for (int cols = 0; cols < game->getHeldPiece()->getWidth(); ++cols)
+                {
+                    if (grid[rows][cols])
+                    {
+                        w->fillRectangle(x + 60 + rows * 10, y + cols * 10 + 80 + (board->getRows() * 10), 10, 10, curColour);
+                    }
                 }
             }
         }
