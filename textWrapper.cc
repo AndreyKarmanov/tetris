@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 
+// Constructor
 TextWrapper::TextWrapper(std::vector<GameSubject *> games)
 {
     int player = 0;
@@ -18,6 +19,16 @@ TextWrapper::TextWrapper(std::vector<GameSubject *> games)
     }
 }
 
+// Destructor
+TextWrapper::~TextWrapper()
+{
+    for (auto ob : observers)
+    {
+        delete ob;
+    }
+}
+
+// Prints a string, padded to the specified length
 void TextWrapper::printLine(std::string curline, int padding)
 {
     std::cout << curline;
@@ -26,8 +37,37 @@ void TextWrapper::printLine(std::string curline, int padding)
     }
 }
 
+// Notifies all text observers of a change, but delays printing
+// so the boards can later be printed side by side 
+void TextWrapper::notifyAll()
+{
+    std::vector<std::stringstream> boards;
+    // Store the generated boards in a stringstream vector instead of printing
+    for (auto ob : observers)
+    {
+        boards.push_back(ob->generateBoard());
+    }
+    int boardNum = boards.size();
+    std::string curline;
+    while (getline(boards[0], curline)) // Get the next line of the first board
+    {
+        printLine(curline, 20); // Print line of first board
+        // Iterate through the rest of the boards and prints a line for each of them
+        for (int i = 1; i < boardNum; ++i) {
+            getline(boards[i], curline);
+            printLine(curline, 20);
+        }
+        std::cout << std::endl;
+    }
+}
+
+// Constructor for TextObserver
 TextWrapper::TextObserver::TextObserver(GameSubject *game) : GameObserver{game} {}
 
+// Destructor for TextObserver
+TextWrapper::TextObserver::~TextObserver() {}
+
+// Notifies the TextObserver, but returns the output as a stringstream instead of printing
 std::stringstream TextWrapper::TextObserver::generateBoard()
 {
     GameBoard *board = game->getBoard();
@@ -72,6 +112,7 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
     }
     ss << "+" << std::endl;
 
+    // Store the next piece image in a stringstream
     std::stringstream nexts;
     nexts << "Next:" << std::endl;
     Piece *np = game->getNextPiece();
@@ -91,6 +132,7 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
         }
         nexts << std::endl;
     }
+    // Pad extra lines if needed keep the number of lines consistent
     if (np->getType() == 'O')
     {
         nexts << std::endl;
@@ -100,6 +142,7 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
         nexts << std::endl;
     }
 
+    // If there is a held piece, draw the next and held pieces side by side
     if (game->getHeldPiece()) {
         std::stringstream helds;
         helds << "Held:" << std::endl;
@@ -121,6 +164,7 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
             helds << std::endl;
         }
 
+        // Iterate through the two stringsteams add them to the main ss
         std::string curline;
         while (getline(nexts, curline))
         {
@@ -142,38 +186,8 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
     return ss;
 }
 
+// Notify the observer of a change
 void TextWrapper::TextObserver::notify()
 {
     std::cout << generateBoard().str();
-}
-
-TextWrapper::TextObserver::~TextObserver() {}
-
-TextWrapper::~TextWrapper()
-{
-    for (auto ob : observers)
-    {
-        delete ob;
-    }
-}
-
-void TextWrapper::notifyAll()
-{
-    std::vector<std::stringstream> boards;
-    for (auto ob : observers)
-    {
-        boards.push_back(ob->generateBoard());
- //       ob->notify();
-    }
-    int boardNum = boards.size();
-    std::string curline;
-    while (getline(boards[0], curline))
-    {
-        printLine(curline, 20);
-        for (int i = 1; i < boardNum; ++i) {
-            getline(boards[i], curline);
-            printLine(curline, 20);
-        }
-        std::cout << std::endl;
-    }
 }
