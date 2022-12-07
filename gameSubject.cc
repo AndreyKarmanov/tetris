@@ -13,8 +13,14 @@ GameSubject::~GameSubject()
 {
   delete board;
   delete currentPiece;
-  delete nextPiece;
-  delete heldPiece;
+  if (nextPiece)
+  {
+    delete nextPiece;
+  }
+  if (heldPiece)
+  {
+    delete heldPiece;
+  }
 }
 
 // Attach an observer to the subject

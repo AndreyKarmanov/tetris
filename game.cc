@@ -26,10 +26,6 @@ Game::~Game()
     {
         delete p;
     }
-    if (currentPiece)
-    {
-        delete currentPiece;
-    }
     delete blindBoard;
     // Deletes the factory
     delete factory;
