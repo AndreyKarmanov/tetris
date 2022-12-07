@@ -2,6 +2,8 @@
 #define TEXTGAMEOBSERVER_H
 
 #include <vector>
+#include <sstream>
+#include <string>
 #include "gameObserver.h"
 
 class GameSubject;
@@ -13,11 +15,14 @@ private:
     {
     public:
         TextObserver(GameSubject *game);
+        std::stringstream generateBoard();
         virtual void notify();
         ~TextObserver();
     };
 
     std::vector<TextObserver *> observers;
+
+    void printLine(std::string curline);
     
 public:
     TextWrapper(std::vector<GameSubject *> games);
