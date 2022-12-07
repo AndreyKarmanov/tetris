@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++14 -g -Wall -MMD \
 # MMD generates dependency files
 OBJECTS = window.o piece.o pieceFactory.o gameObserver.o gameSubject.o gameBoard.o blindBoard.o textWrapper.o graphicsWrapper.o game.o main.o
 DEPENDS = ${objects:.o=.d}
-PROGRAM = biquardis
+PROGRAM = biquadris
 
 ${PROGRAM}: ${OBJECTS}
 	${CXX} ${CXXFLAGS} ${OBJECTS} -o ${PROGRAM} -lX11
