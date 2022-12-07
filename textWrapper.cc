@@ -11,7 +11,6 @@
 // Constructor
 TextWrapper::TextWrapper(std::vector<GameSubject *> games)
 {
-    int player = 0;
     for (auto game : games)
     {
         observers.emplace_back(new TextObserver{game});
