@@ -18,7 +18,7 @@ protected:
 
   // The game state
   GameBoard *board;
-  Piece *currentPiece, *nextPiece;
+  Piece *currentPiece, *nextPiece, *heldPiece;
   int score, level, highScore;
   std::string name;
 
@@ -42,6 +42,7 @@ public:
   int getHighScore() const;
   Piece *getPiece() const;
   Piece *getNextPiece() const;
+  Piece *getHeldPiece() const;
   std::string getName() const;
   virtual GameBoard *getBoard() const;
 
