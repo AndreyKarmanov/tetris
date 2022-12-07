@@ -130,3 +130,4 @@ void GraphicsWrapper::GraphicsObserver::notify()
         }
     }
 }
+
