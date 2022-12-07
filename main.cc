@@ -124,14 +124,13 @@ int main(int argc, char *argv[])
 
     for (int i = 1; i <= min(players, 4); ++i)
     {
-        games.push_back(new Game(string("Player " + to_string(i + 1)), startLevel, rows, cols, true, seedNum, i % 2 == 1 ? seq1 : seq2));
+        games.push_back(new Game(string("Player " + to_string(i)), startLevel, rows, cols, true, seedNum, i % 2 == 1 ? seq1 : seq2));
     }
 
     GraphicsWrapper *gw;
     TextWrapper *tw;
 
     tw = new TextWrapper(vector<GameSubject *>(games.begin(), games.end()));
-    tw->notifyAll();
 
     if (!textOnly)
     {
@@ -141,158 +140,170 @@ int main(int argc, char *argv[])
 
     string input;
     int multiplier;
+    bool dropped = false; // sets true when a player has dropped a piece to break the turn loop
     stringstream ss;
 
     for (int i = 0;; i = (i + 1) % games.size())
     {
         Game *g = games[i];
-        cout << "Player " << g->getName() << "'s turn" << endl;
-        getCommand(ss, input, multiplier);
-        if (input == "left")
-        {
+        cout << g->getName() << "'s turn" << endl;
+        tw->notifyAll();
+        while (true) // turn loop
+            {
+            getCommand(ss, input, multiplier);
+            if (input == "left")
+            {
 
-            g->move(-1, 0, multiplier);
-        }
-        else if (input == "right")
-        {
+                g->move(-1, 0, multiplier);
+            }
+            else if (input == "right")
+            {
 
-            g->move(1, 0, multiplier);
-        }
-        else if (input == "down")
-        {
-            g->move(0, 1, multiplier);
-        }
-        else if (input == "clockwise")
-        {
-            for (int j = multiplier; j > 0; --j)
-            {
-                g->rotateCW();
+                g->move(1, 0, multiplier);
             }
-        }
-        else if (input == "counterclockwise")
-        {
-            for (int j = multiplier; j > 0; --j)
+            else if (input == "down")
             {
-                g->rotateCCW();
+                g->move(0, 1, multiplier);
             }
-        }
-        else if (input == "drop")
-        {
-            for (int j = multiplier; j > 0; --j)
+            else if (input == "clockwise")
             {
-                g->drop();
-                if (g->getLastClearCount() >= 2)
+                for (int j = multiplier; j > 0; --j)
                 {
-                    cout << "Player " << g->getName() << " has cleared " << g->getLastClearCount() << " lines!" << endl;
-                    cout << "Choose a bonus: heavy, blind, or force [IJLOTSZ]" << endl;
-                    while (true)
-                    {
-                        getCommand(ss, input, multiplier);
-                        if (input == "heavy")
-                        {
-                            games[(i + 1) % games.size()]->setHeavy(true);
-                            break;
-                        }
-                        else if (input == "blind")
-                        {
-                            games[(i + 1) % games.size()]->setBlind(true);
-                            break;
-                        }
-                        else if (input == "force")
-                        {
-                            getCommand(ss, input, multiplier);
-                            if (commands.find(input) == commands.end())
-                            {
-                                cout << "Invalid bonus" << endl;
-                                continue;
-                            }
-                            games[(i + 1) % games.size()]->setPiece(input[0]);
-                            break;
-                        }
-                        cout << "Invalid bonus" << endl;
-                    }
-                    games[(i + 1) % games.size()]->notifyObservers();
+                    g->rotateCW();
                 }
             }
-        }
-        else if (input == "levelup")
-        {
-            g->setLevel(g->getLevel() + 1 * multiplier);
-        }
-        else if (input == "leveldown")
-        {
-            g->setLevel(g->getLevel() - 1 * multiplier);
-        }
-        else if (input == "restart")
-        {
-            g->restart();
-        }
-        else if (input == "random")
-        {
-            g->setRandom();
-        }
-        else if (input == "sequence")
-        {
-            string file;
-            getCommand(ss, file, multiplier);
-            ifstream f(file);
-            if (f.is_open())
+            else if (input == "counterclockwise")
             {
-                loadCommandSequence(ss, f);
-                f.close();
+                for (int j = multiplier; j > 0; --j)
+                {
+                    g->rotateCCW();
+                }
             }
-        }
-        else if (input == "norandom")
-        {
-            string file;
-            if (cin >> file)
+            else if (input == "drop")
             {
+                dropped = true;
+                for (int j = multiplier; j > 0; --j)
+                {
+                    g->drop();
+                    if (g->getLastClearCount() >= 2)
+                    {
+                        cout << "Player " << g->getName() << " has cleared " << g->getLastClearCount() << " lines!" << endl;
+                        cout << "Choose a bonus: heavy, blind, or force [IJLOTSZ]" << endl;
+                        while (true)
+                        {
+                            getCommand(ss, input, multiplier);
+                            if (input == "heavy")
+                            {
+                                games[(i + 1) % games.size()]->setHeavy(true);
+                                break;
+                            }
+                            else if (input == "blind")
+                            {
+                                games[(i + 1) % games.size()]->setBlind(true);
+                                break;
+                            }
+                            else if (input == "force")
+                            {
+                                getCommand(ss, input, multiplier);
+                                if (commands.find(input) == commands.end())
+                                {
+                                    cout << "Invalid bonus" << endl;
+                                    continue;
+                                }
+                                games[(i + 1) % games.size()]->setPiece(input[0]);
+                                break;
+                            }
+                            cout << "Invalid bonus" << endl;
+                        }
+                        games[(i + 1) % games.size()]->notifyObservers();
+                    }
+                }
+            }
+            else if (input == "levelup")
+            {
+                g->setLevel(g->getLevel() + 1 * multiplier);
+            }
+            else if (input == "leveldown")
+            {
+                g->setLevel(g->getLevel() - 1 * multiplier);
+            }
+            else if (input == "restart")
+            {
+                g->restart();
+            }
+            else if (input == "random")
+            {
+                g->setRandom();
+            }
+            else if (input == "sequence")
+            {
+                string file;
+                getCommand(ss, file, multiplier);
                 ifstream f(file);
                 if (f.is_open())
                 {
-                    g->setSequence(getSequence(f));
+                    loadCommandSequence(ss, f);
                     f.close();
                 }
             }
-        }
-        else if (input == "quit")
-        {
-            break;
-        }
-        else if (input == "rename")
-        {
-            string name;
-            getCommand(ss, name, multiplier);
-            string command;
-            getCommand(ss, command, multiplier);
-
-            if (commands.count(command) == 0)
+            else if (input == "norandom")
             {
-                commands[command] = name;
+                string file;
+                if (cin >> file)
+                {
+                    ifstream f(file);
+                    if (f.is_open())
+                    {
+                        g->setSequence(getSequence(f));
+                        f.close();
+                    }
+                }
+            }
+            else if (input == "quit")
+            {
+                break;
+            }
+            else if (input == "rename")
+            {
+                string name;
+                getCommand(ss, name, multiplier);
+                string command;
+                getCommand(ss, command, multiplier);
+
+                if (commands.count(command) == 0)
+                {
+                    commands[command] = name;
+                }
+                else
+                {
+                    cout << "Command already exists" << endl;
+                }
+                --i;
             }
             else
             {
-                cout << "Command already exists" << endl;
-            }
-            --i;
-        }
-        else
-        {
-            if (input.length() == 1)
-            {
-                g->setPiece(input[0]);
-            }
+                if (input.length() == 1)
+                {
+                    g->setPiece(input[0]);
+                }
 
-            cout << "Invalid command" << endl;
-            --i;
+                cout << "Invalid command" << endl;
+                --i;
+            }
+            if (g->getGameOver())
+            {
+                g->restart();
+            }
+            g->notifyObservers();
+            if (dropped)
+            {
+                dropped = false;
+                break;
+            }
         }
-        if (g->getGameOver())
-        {
-            g->restart();
-        }
-        g->notifyObservers();
     }
 
+    delete tw;
     if (!textOnly)
     {
         delete gw;
