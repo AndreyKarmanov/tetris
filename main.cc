@@ -213,6 +213,9 @@ int main(int argc, char *argv[])
                                 }
                                 games[(i + 1) % games.size()]->setPiece(input[0]);
                                 break;
+                            } else if (input == "quit") {
+                                playing = false;
+                                break;
                             }
                             cout << "Invalid bonus" << endl;
                         }
