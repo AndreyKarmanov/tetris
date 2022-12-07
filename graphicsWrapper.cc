@@ -104,4 +104,29 @@ void GraphicsWrapper::GraphicsObserver::notify()
             }
         }
     }
+    
+    // draw the held piece
+
+    if (game->getHeldPiece())
+    {
+        std::vector<std::vector<bool>> grid = game->getHeldPiece()->getGrid();
+        auto curColour = game->getHeldPiece()->getColour();
+
+        // a white background is drawn each time behind the next piece
+        w->fillRectangle(x + 60, y + 80 + (board->getRows() * 10), 30, 30, Xwindow::White);
+        {
+            // the next piece is drawn
+            // we must loop over each cell in the grid to draw it to the screen
+            for (int rows = 0; rows < game->getHeldPiece()->getHeight(); ++rows)
+            {
+                for (int cols = 0; cols < game->getHeldPiece()->getWidth(); ++cols)
+                {
+                    if (grid[rows][cols])
+                    {
+                        w->fillRectangle(x + 60 + rows * 10, y + cols * 10 + 80 + (board->getRows() * 10), 10, 10, curColour);
+                    }
+                }
+            }
+        }
+    }
 }
