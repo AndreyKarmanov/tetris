@@ -83,7 +83,7 @@ void GraphicsWrapper::GraphicsObserver::notify()
     // each stat is drawn
     w->drawString(x + 10, y + 40 + (board->getRows() * 10), "Score: " + std::to_string(game->getScore()));
     w->drawString(x + 10, y + 55 + (board->getRows() * 10), "HiScore: " + std::to_string(game->getHighScore()));
-    w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next:");
+    w->drawString(x + 10, y + 70 + (board->getRows() * 10), "Next: Held:");
 
     std::vector<std::vector<bool>> grid = game->getNextPiece()->getGrid();
     auto curColour = game->getNextPiece()->getColour();
