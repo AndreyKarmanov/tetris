@@ -48,7 +48,7 @@ std::stringstream TextWrapper::TextObserver::generateBoard()
         ss << "-";
     }
     ss << "+" << std::endl;
-    for (int rows = 3; rows < board->getRows(); ++rows)
+    for (int rows = 0; rows < board->getRows(); ++rows)
     {
         ss << "|";
         for (int cols = 0; cols < board->getCols(); ++cols)
