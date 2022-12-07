@@ -331,6 +331,12 @@ void Game::setRandom()
     factory->setRandom(true);
 }
 
+// Set the held piece
+void Game::setHeldPiece(char c)
+{
+    heldPiece = factory->getPiece(c, level, heavyPieces);
+}
+
 // Sets the sequence of pieces
 void Game::setSequence(std::string sequence)
 {

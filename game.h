@@ -75,6 +75,7 @@ public:
     void setHeavy(bool heavy);
     void setBlind(bool blind);
     void setRandom();
+    void setHeldPiece(char c);
     void setSequence(std::string sequence);
 
     // Returns the board

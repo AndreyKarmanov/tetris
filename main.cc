@@ -52,6 +52,7 @@ std::map<std::string, std::string> commands{
     {"heavy", "heavy"},
     {"blind", "blind"},
     {"force", "force"},
+    {"rmHold", "rmHold"},
     {"", ""}};
 
 int main(int argc, char *argv[])
@@ -240,6 +241,11 @@ int main(int argc, char *argv[])
                                     continue;
                                 }
                                 games[(i + 1) % games.size()]->setPiece(input[0]);
+                                break;
+                            }
+                            else if (input == "rmHold")
+                            {
+                                games[(i + 1) % games.size()]->setHeldPiece(' ');
                                 break;
                             }
                             else if (input == "quit")
