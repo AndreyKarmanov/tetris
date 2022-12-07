@@ -22,7 +22,7 @@ private:
 
     std::vector<TextObserver *> observers;
 
-    void printLine(std::string curline);
+    void printLine(std::string curline, int padding);
     
 public:
     TextWrapper(std::vector<GameSubject *> games);
