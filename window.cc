@@ -47,11 +47,9 @@ Xwindow::Xwindow(int width, int height)
 
   // Make window non-resizeable.
   XSizeHints hints;
-  hints.flags = (USPosition | PSize | PMinSize | PMaxSize);
-  hints.height = hints.base_height = hints.min_height = height;
-  hints.max_height = height + 200;
-  hints.width = hints.base_width = hints.min_width = width;
-  hints.max_width = width + 200;
+  hints.flags = (USPosition | PSize | PMinSize | PMaxSize );
+  hints.height = hints.base_height = hints.min_height = hints.max_height = height;
+  hints.width = hints.base_width = hints.min_width = hints.max_width = width;
   XSetNormalHints(d, w, &hints);
 
   XSynchronize(d, True);
