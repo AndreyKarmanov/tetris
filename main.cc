@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     int startLevel = 0;
     int rows = 18;
     int cols = 11;
-    int players = 3;
+    int players = 2;
 
     // Parse command line arguments
     for (int i = 1; i < argc; ++i)
