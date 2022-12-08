@@ -341,7 +341,6 @@ int main(int argc, char *argv[])
                 }
 
                 cout << "Invalid command" << endl;
-                --i;
             }
             if (g->getGameOver())
             {
