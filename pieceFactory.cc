@@ -8,6 +8,7 @@ std::vector<Piece *> PieceFactory::customPieceList = std::vector<Piece *>();
 
 PieceFactory::PieceFactory(std::string sequence, bool random, int seed) : random{random}, seed{seed}
 {
+    srand(seed);
     updatePieces(sequence);
 }
 
@@ -131,8 +132,7 @@ void PieceFactory::addPieces(std::ifstream &in)
             }
             cout << endl;
         }
-
-        PieceFactory::customPieceList.push_back(new Piece(grid, 0, 0, type, false));
+        PieceFactory::customPieceList.push_back(new Piece(grid, 0, 8, type, false));
     }
 }
 

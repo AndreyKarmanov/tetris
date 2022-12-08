@@ -185,7 +185,7 @@ void Game::rotateCCW()
 void Game::newPiece()
 {
     // Checks if the next piece is null, and if so, creates a new one
-    if (nextPiece == nullptr)
+    if (!nextPiece)
     {
         nextPiece = factory->getPiece(level, heavyPieces);
     }

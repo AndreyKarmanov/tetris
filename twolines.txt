@@ -1,1 +1,1 @@
-I 3left drop drop I 3left drop drop I right drop drop I right drop drop O 4right drop drop I 5right clock 4right 
+I 3left drop 5right drop I 3left drop 5left drop I right drop 5right drop I right drop 5left drop O 4right drop drop I 5right clock 4right 

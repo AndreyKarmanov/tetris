@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     // Default values for command line arguments
     string scriptfile1 = "sequence1.txt";
     string scriptfile2 = "sequence2.txt";
-    string customPieceFile = "";
+    string customPieceFile = "customExample.txt";
     bool textOnly = false;
     int seedNum = 0;
     int startLevel = 0;

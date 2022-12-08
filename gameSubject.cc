@@ -6,7 +6,7 @@
 #include <string>
 
 // Constructor
-GameSubject::GameSubject(int level, int rows, int cols, std::string name) : board{new GameBoard(rows, cols)}, score{0}, level{level}, highScore{0}, name{name} {}
+GameSubject::GameSubject(int level, int rows, int cols, std::string name) : board{new GameBoard(rows, cols)}, score{0}, level{level}, highScore{0}, name{name}, currentPiece{nullptr}, nextPiece{nullptr}, heldPiece{nullptr} {}
 
 // Destructor
 GameSubject::~GameSubject()
